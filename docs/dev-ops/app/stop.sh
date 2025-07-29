@@ -1,0 +1,1 @@
+docker stop tiny-pay-pro-v3

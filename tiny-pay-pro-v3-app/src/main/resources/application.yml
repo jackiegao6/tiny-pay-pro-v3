@@ -1,0 +1,5 @@
+spring:
+  config:
+    name: tiny-pay-pro-v3-app
+  profiles:
+    active: dev
