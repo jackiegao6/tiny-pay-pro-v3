@@ -25,7 +25,7 @@ public class TrailBalanceEntity {
     /** 折扣后价格 */
     private BigDecimal currentPrice;
     /** 拼团目标数量 */
-    private Integer targetCount;
+    private Integer target;
     /** 拼团开始时间 */
     private Date startTime;
     /** 拼团结束时间 */

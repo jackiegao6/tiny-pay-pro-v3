@@ -13,19 +13,19 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 
-public class SwitchNode <T, D, R> extends AbstractNodeSupport {
+public class SwitchNode extends AbstractNodeSupport {
 
-    private final EndNode<T, D, R> endNode;
+    private final TrailNode trailNode;
 
     @Override
-    public TrailBalanceEntity apply(TrailMarketProductEntity reqParam, DynamicContext context) throws Exception {
+    protected TrailBalanceEntity doApply(TrailMarketProductEntity requestParameter, DynamicContext dynamicContext) throws Exception {
         log.info("SwitchNode...");
 
-        return null;
+        return router(requestParameter, dynamicContext);
     }
 
     @Override
     public NodeHandler<TrailMarketProductEntity, DynamicContext, TrailBalanceEntity> get(TrailMarketProductEntity reqParam, DynamicContext context) throws Exception {
-        return endNode;
+        return trailNode;
     }
 }

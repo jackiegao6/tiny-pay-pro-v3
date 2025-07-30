@@ -5,12 +5,14 @@ import com.gzc.domain.trial.model.entity.resp.TrailBalanceEntity;
 import com.gzc.domain.trial.service.DynamicContext;
 import com.gzc.domain.trial.service.node.RootNode;
 import com.gzc.types.design.framework.tree.NodeHandler;
+import org.springframework.stereotype.Component;
 
-public class DefaultTrailNodeFactory<T, D, R> {
+@Component
+public class DefaultTrailNodeFactory {
 
-    private final RootNode<T, D, R> rootNode;
+    private final RootNode rootNode;
 
-    public DefaultTrailNodeFactory(RootNode<T, D, R> rootNode) {
+    public DefaultTrailNodeFactory(RootNode rootNode) {
         this.rootNode = rootNode;
     }
 
