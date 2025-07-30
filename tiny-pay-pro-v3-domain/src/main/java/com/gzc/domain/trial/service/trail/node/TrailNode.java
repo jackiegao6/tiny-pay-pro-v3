@@ -27,6 +27,7 @@ import java.util.concurrent.*;
 public class TrailNode extends AbstractNodeSupport {
 
     private final EndNode endNode;
+    private final ErrorNode errorNode;
     private final ThreadPoolExecutor threadPoolExecutor;
     private final Map<String, IDiscountCalculateService> discountCalculateServiceMap;
 
@@ -40,12 +41,15 @@ public class TrailNode extends AbstractNodeSupport {
         FutureTask<ActivityDiscountVO> activityDiscountVOFutureTask = new FutureTask<>(new QueryActivityAndDiscountVOFromDBThreadTask(goodsId, trailRepository));
         threadPoolExecutor.execute(activityDiscountVOFutureTask);
 
-        SkuVO skuVO = skuVOFutureTask.get(timeout, TimeUnit.SECONDS);
+        SkuVO skuVO = null;
+        ActivityDiscountVO activityDiscountVO = null;
+        try {
+            skuVO = skuVOFutureTask.get(timeout, TimeUnit.SECONDS);
+            activityDiscountVO = activityDiscountVOFutureTask.get(timeout, TimeUnit.SECONDS);
+        } catch (Exception ignored) {
+        }
         context.setSkuVO(skuVO);
-        if (skuVO == null) log.error("sku 为空");
-        ActivityDiscountVO activityDiscountVO = activityDiscountVOFutureTask.get(timeout, TimeUnit.SECONDS);
         context.setActivityDiscountVO(activityDiscountVO);
-        if (activityDiscountVO == null) log.error("activityDiscountVO 为空");
 
     }
 
@@ -53,8 +57,16 @@ public class TrailNode extends AbstractNodeSupport {
     protected TrailBalanceEntity doApply(TrailMarketProductEntity reqParam, DynamicContext context) throws Exception {
 
         ActivityDiscountVO activityDiscountVO = context.getActivityDiscountVO();
+        if (null == activityDiscountVO) {
+            return router(reqParam, context);
+        }
+
         ActivityDiscountVO.DiscountVO discountVO = activityDiscountVO.getDiscountVO();
         SkuVO skuVO = context.getSkuVO();
+
+        if (discountVO == null || skuVO == null){
+            router(reqParam, context);
+        }
 
         String discountServiceKey = discountVO.getMarketPlan();
         IDiscountCalculateService discountCalculateService = discountCalculateServiceMap.get(discountServiceKey);
@@ -73,6 +85,9 @@ public class TrailNode extends AbstractNodeSupport {
 
     @Override
     public NodeHandler<TrailMarketProductEntity, DynamicContext, TrailBalanceEntity> get(TrailMarketProductEntity reqParam, DynamicContext context) throws Exception {
+        if (context.getSkuVO() == null || context.getActivityDiscountVO() == null || context.getActivityDiscountVO().getDiscountVO() == null){
+            return errorNode;
+        }
         return endNode;
     }
 

@@ -31,4 +31,16 @@ public class ITrailServiceTest {
 
         log.info("返回结果:{}", JSON.toJSONString(trailBalanceEntity));
     }
+
+    @Test
+    public void test_wrong_indexMarketTrial() throws Exception {
+
+        TrailMarketProductEntity trailMarketProductEntity = new TrailMarketProductEntity();
+        trailMarketProductEntity.setUserId("gzc");
+        trailMarketProductEntity.setGoodsId("9890000");
+
+        TrailBalanceEntity trailBalanceEntity = iIndexGroupBuyMarketService.indexMarketTrial(trailMarketProductEntity);
+
+        log.info("返回结果:{}", JSON.toJSONString(trailBalanceEntity));
+    }
 }
