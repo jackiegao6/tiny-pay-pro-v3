@@ -1,4 +1,4 @@
-package com.gzc.domain.trial.service;
+package com.gzc.domain.trial.service.trail;
 
 
 import com.gzc.domain.trial.model.valobj.ActivityDiscountVO;
@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -16,4 +18,5 @@ public class DynamicContext {
 
     private SkuVO skuVO;
     private ActivityDiscountVO activityDiscountVO;
+    private BigDecimal currentPrice;
 }

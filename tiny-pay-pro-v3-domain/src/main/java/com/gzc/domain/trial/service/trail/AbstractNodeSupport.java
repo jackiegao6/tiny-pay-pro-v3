@@ -1,4 +1,4 @@
-package com.gzc.domain.trial.service;
+package com.gzc.domain.trial.service.trail;
 
 import com.gzc.domain.trial.adapter.repository.ITrailRepository;
 import com.gzc.domain.trial.model.entity.req.TrailMarketProductEntity;

@@ -1,14 +1,11 @@
-package com.gzc.domain.trial.service;
+package com.gzc.domain.trial.service.trail;
 
 import com.gzc.domain.trial.model.entity.req.TrailMarketProductEntity;
 import com.gzc.domain.trial.model.entity.resp.TrailBalanceEntity;
-import com.gzc.domain.trial.service.factory.DefaultTrailNodeFactory;
-import com.gzc.domain.trial.service.node.RootNode;
+import com.gzc.domain.trial.service.trail.factory.DefaultTrailNodeFactory;
 import com.gzc.types.design.framework.tree.NodeHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 
 @Service

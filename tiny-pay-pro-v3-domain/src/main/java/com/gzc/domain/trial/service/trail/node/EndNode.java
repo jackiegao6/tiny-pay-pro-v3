@@ -1,13 +1,12 @@
-package com.gzc.domain.trial.service.node;
+package com.gzc.domain.trial.service.trail.node;
 
 import com.gzc.domain.trial.model.entity.req.TrailMarketProductEntity;
 import com.gzc.domain.trial.model.entity.resp.TrailBalanceEntity;
 import com.gzc.domain.trial.model.valobj.ActivityDiscountVO;
 import com.gzc.domain.trial.model.valobj.SkuVO;
-import com.gzc.domain.trial.service.AbstractNodeSupport;
-import com.gzc.domain.trial.service.DynamicContext;
+import com.gzc.domain.trial.service.trail.AbstractNodeSupport;
+import com.gzc.domain.trial.service.trail.DynamicContext;
 import com.gzc.types.design.framework.tree.NodeHandler;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +21,14 @@ public class EndNode extends AbstractNodeSupport {
     protected TrailBalanceEntity doApply(TrailMarketProductEntity requestParameter, DynamicContext dynamicContext) throws Exception {
         SkuVO skuVO = dynamicContext.getSkuVO();
         ActivityDiscountVO activityDiscountVO = dynamicContext.getActivityDiscountVO();
-
+        BigDecimal currentPrice = dynamicContext.getCurrentPrice();
 
         return TrailBalanceEntity.builder()
                 .goodsId(skuVO.getGoodsId())
                 .goodsName(skuVO.getGoodsName())
                 .originalPrice(skuVO.getOriginalPrice())
                 .deductionPrice(new BigDecimal("0.00"))
-                .currentPrice(new BigDecimal("0.00"))
+                .currentPrice(currentPrice)
                 .target(activityDiscountVO.getTarget())
                 .startTime(activityDiscountVO.getStartTime())
                 .endTime(activityDiscountVO.getEndTime())

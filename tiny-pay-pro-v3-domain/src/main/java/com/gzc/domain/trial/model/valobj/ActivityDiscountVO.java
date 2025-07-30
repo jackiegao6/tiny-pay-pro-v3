@@ -27,7 +27,7 @@ public class ActivityDiscountVO {
     /**
      * 折扣配置
      */
-    private GroupBuyDiscountVO groupBuyDiscount;
+    private DiscountVO discountVO;
     /**
      * 拼团方式（0自动成团、1达成目标拼团）
      */
@@ -69,7 +69,7 @@ public class ActivityDiscountVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class GroupBuyDiscountVO {
+    public static class DiscountVO {
         /**
          * 折扣标题
          */

@@ -12,6 +12,8 @@ public enum ResponseCode {
     SUCCESS("0000", "成功"),
     UN_ERROR("0001", "未知失败"),
     ILLEGAL_PARAMETER("0002", "非法参数"),
+
+    WRONG_TYPE("S1001","折扣计算服务类型错误")
     ;
 
     private String code;

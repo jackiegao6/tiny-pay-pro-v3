@@ -1,6 +1,5 @@
 package com.gzc.infrastructure.adapter.repository;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.gzc.domain.trial.adapter.repository.ITrailRepository;
 import com.gzc.domain.trial.model.valobj.ActivityDiscountVO;
 import com.gzc.domain.trial.model.valobj.SkuVO;
@@ -41,7 +40,7 @@ public class TrailRepository implements ITrailRepository {
                 .activityId(groupBuyActivity.getActivityId())
                 .activityName(groupBuyActivity.getActivityName())
                 .goodsId(goodsId)
-                .groupBuyDiscount(ActivityDiscountVO.GroupBuyDiscountVO.builder()
+                .discountVO(ActivityDiscountVO.DiscountVO.builder()
                         .discountName(groupBuyDiscount.getDiscountName())
                         .discountDesc(groupBuyDiscount.getDiscountDesc())
                         .discountType(groupBuyDiscount.getDiscountType())

@@ -1,20 +1,24 @@
-package com.gzc.domain.trial.service.node;
+package com.gzc.domain.trial.service.trail.node;
 
-import com.gzc.domain.trial.adapter.repository.ITrailRepository;
+import com.alibaba.fastjson2.JSON;
 import com.gzc.domain.trial.model.entity.req.TrailMarketProductEntity;
 import com.gzc.domain.trial.model.entity.resp.TrailBalanceEntity;
 import com.gzc.domain.trial.model.valobj.ActivityDiscountVO;
 import com.gzc.domain.trial.model.valobj.SkuVO;
-import com.gzc.domain.trial.service.AbstractNodeSupport;
-import com.gzc.domain.trial.service.DynamicContext;
-import com.gzc.domain.trial.service.thread.QueryActivityAndDiscountVOFromDBThreadTask;
-import com.gzc.domain.trial.service.thread.QuerySkuVOFromDBThreadTask;
-import com.gzc.types.design.framework.tree.AbstractMultiThreadNodeRouter;
+import com.gzc.domain.trial.service.discount.IDiscountCalculateService;
+import com.gzc.domain.trial.service.trail.AbstractNodeSupport;
+import com.gzc.domain.trial.service.trail.DynamicContext;
+import com.gzc.domain.trial.service.trail.thread.QueryActivityAndDiscountVOFromDBThreadTask;
+import com.gzc.domain.trial.service.trail.thread.QuerySkuVOFromDBThreadTask;
 import com.gzc.types.design.framework.tree.NodeHandler;
+import com.gzc.types.enums.ResponseCode;
+import com.gzc.types.exception.AppException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.Map;
 import java.util.concurrent.*;
 
 @Service
@@ -23,7 +27,8 @@ import java.util.concurrent.*;
 public class TrailNode extends AbstractNodeSupport {
 
     private final EndNode endNode;
-    private final ThreadPoolExecutor threadPoolExecutor;// todo
+    private final ThreadPoolExecutor threadPoolExecutor;
+    private final Map<String, IDiscountCalculateService> discountCalculateServiceMap;
 
 
     @Override
@@ -46,6 +51,22 @@ public class TrailNode extends AbstractNodeSupport {
 
     @Override
     protected TrailBalanceEntity doApply(TrailMarketProductEntity reqParam, DynamicContext context) throws Exception {
+
+        ActivityDiscountVO activityDiscountVO = context.getActivityDiscountVO();
+        ActivityDiscountVO.DiscountVO discountVO = activityDiscountVO.getDiscountVO();
+        SkuVO skuVO = context.getSkuVO();
+
+        String discountServiceKey = discountVO.getMarketPlan();
+        IDiscountCalculateService discountCalculateService = discountCalculateServiceMap.get(discountServiceKey);
+        if (null == discountCalculateService) {
+            log.info("不存在{}类型的折扣计算服务，支持类型为:{}", discountVO.getMarketPlan(), JSON.toJSONString(discountCalculateServiceMap.keySet()));
+            throw new AppException(ResponseCode.WRONG_TYPE.getCode(), ResponseCode.WRONG_TYPE.getInfo());
+        }
+
+        BigDecimal currentPrice = discountCalculateService.calculate(reqParam.getUserId(), skuVO.getOriginalPrice(), discountVO);
+        context.setCurrentPrice(currentPrice);
+
+
         log.info("拼团优惠试算 完成");
         return router(reqParam, context);
     }

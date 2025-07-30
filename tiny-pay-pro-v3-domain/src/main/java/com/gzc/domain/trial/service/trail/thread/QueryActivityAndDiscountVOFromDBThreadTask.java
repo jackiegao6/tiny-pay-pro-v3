@@ -1,4 +1,4 @@
-package com.gzc.domain.trial.service.thread;
+package com.gzc.domain.trial.service.trail.thread;
 
 import com.gzc.domain.trial.adapter.repository.ITrailRepository;
 import com.gzc.domain.trial.model.valobj.ActivityDiscountVO;
