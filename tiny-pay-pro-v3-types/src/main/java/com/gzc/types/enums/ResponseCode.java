@@ -15,6 +15,7 @@ public enum ResponseCode {
 
     WRONG_TYPE("S1001","折扣计算服务类型错误"),
     UNKNOWN_ERROR("S1002", "商品无拼团营销配置"),
+    FULL_TEAM("S1003", "拼团已满"),
     ;
 
     private String code;

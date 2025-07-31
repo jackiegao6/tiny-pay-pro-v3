@@ -69,8 +69,10 @@ public class TrailNode extends AbstractNodeSupport {
             throw new AppException(ResponseCode.WRONG_TYPE.getCode(), ResponseCode.WRONG_TYPE.getInfo());
         }
 
-        BigDecimal currentPrice = discountCalculateService.calculate(reqParam.getUserId(), skuVO.getOriginalPrice(), discountVO);
+        BigDecimal originalPrice = skuVO.getOriginalPrice();
+        BigDecimal currentPrice = discountCalculateService.calculate(reqParam.getUserId(), originalPrice, discountVO);
         context.setCurrentPrice(currentPrice);
+        context.setDeductionPrice(originalPrice.subtract(currentPrice));
 
 
         log.info("拼团优惠试算 完成");
