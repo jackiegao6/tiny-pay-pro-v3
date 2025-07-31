@@ -16,6 +16,8 @@ public class LockMarketPayOrderResponseDTO {
 
     private String orderId;
     private BigDecimal currentPrice;
+    /*组队id*/
+    private String teamId;
     /** 交易订单状态枚举 */
     private Integer tradeOrderStatus;
 }

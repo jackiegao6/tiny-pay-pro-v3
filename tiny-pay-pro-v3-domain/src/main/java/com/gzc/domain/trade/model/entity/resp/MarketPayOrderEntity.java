@@ -19,6 +19,7 @@ public class MarketPayOrderEntity {
 
     /** 预购订单ID */
     private String orderId;
+    private String teamId;
     /** 折扣金额 */
     private BigDecimal currentPrice;
     /** 交易订单状态枚举 */

@@ -44,6 +44,7 @@ public class TradeRepository implements ITradeRepository {
                 .orderId(groupBuyOrderListResp.getOrderId())
                 .currentPrice(groupBuyOrderListResp.getCurrentPrice())
                 .tradeOrderStatusEnumVO(TradeOrderStatusEnumVO.CREATE)
+                .teamId(groupBuyOrderListResp.getTeamId())
                 .build();
     }
 
@@ -109,6 +110,7 @@ public class TradeRepository implements ITradeRepository {
                 .orderId(orderId)
                 .currentPrice(payDiscountEntity.getCurrentPrice())
                 .tradeOrderStatusEnumVO(TradeOrderStatusEnumVO.CREATE)
+                .teamId(teamId)
                 .build();
 
     }

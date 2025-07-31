@@ -111,6 +111,7 @@ public class MarketTradeController {
                 .info(ResponseCode.SUCCESS.getInfo())
                 .data(LockMarketPayOrderResponseDTO.builder()
                         .orderId(marketPayOrderEntity.getOrderId())
+                        .teamId(marketPayOrderEntity.getTeamId())
                         .currentPrice(marketPayOrderEntity.getCurrentPrice())
                         .tradeOrderStatus(marketPayOrderEntity.getTradeOrderStatusEnumVO().getCode())
                         .build())
