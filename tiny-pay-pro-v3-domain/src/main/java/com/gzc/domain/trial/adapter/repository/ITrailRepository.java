@@ -12,4 +12,6 @@ public interface ITrailRepository {
 
     boolean queryInTagScopeByUserId(String tagId, String userId);
 
+    Integer queryOrderCountByActivityId(Long activityId, String userId);
+
 }

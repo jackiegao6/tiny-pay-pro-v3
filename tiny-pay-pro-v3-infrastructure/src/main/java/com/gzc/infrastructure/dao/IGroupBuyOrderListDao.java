@@ -17,4 +17,6 @@ public interface IGroupBuyOrderListDao {
      */
     GroupBuyOrderList queryGroupBuyOrderRecordByOutTradeNo(GroupBuyOrderList groupBuyOrderListReq);
 
+    Integer queryOrderCountByActivityId(Long activityId, String userId);
+
 }

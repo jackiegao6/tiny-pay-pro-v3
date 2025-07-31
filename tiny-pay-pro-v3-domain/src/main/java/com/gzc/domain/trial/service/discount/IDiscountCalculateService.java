@@ -14,7 +14,7 @@ public interface IDiscountCalculateService {
      * @param discountVO 折扣计划配置
      * @return 商品优惠价格
      */
-    BigDecimal calculate(String userId, BigDecimal originalPrice, ActivityDiscountVO.DiscountVO discountVO);
+    BigDecimal calculate(String userId, BigDecimal originalPrice, String tagId, ActivityDiscountVO.DiscountVO discountVO);
 
 
 }

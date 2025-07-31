@@ -70,7 +70,8 @@ public class TrailNode extends AbstractNodeSupport {
         }
 
         BigDecimal originalPrice = skuVO.getOriginalPrice();
-        BigDecimal currentPrice = discountCalculateService.calculate(reqParam.getUserId(), originalPrice, discountVO);
+        String tagId = activityDiscountVO.getTagId();
+        BigDecimal currentPrice = discountCalculateService.calculate(reqParam.getUserId(), originalPrice, tagId, discountVO);
         context.setCurrentPrice(currentPrice);
         context.setDeductionPrice(originalPrice.subtract(currentPrice));
 

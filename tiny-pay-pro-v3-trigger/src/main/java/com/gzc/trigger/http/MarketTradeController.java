@@ -64,6 +64,10 @@ public class MarketTradeController {
         }
 
 
+        // todo 判断拼团锁单是否在有效时间内
+
+
+
         // 判断拼团锁单是否完成了目标
         if (teamId != null) {
             GroupBuyProgressVO groupBuyProgressVO = tradeOrderService.queryGroupBuyProgress(teamId);

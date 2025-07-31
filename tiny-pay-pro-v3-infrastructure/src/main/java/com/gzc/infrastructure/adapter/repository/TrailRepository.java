@@ -3,10 +3,7 @@ package com.gzc.infrastructure.adapter.repository;
 import com.gzc.domain.trial.adapter.repository.ITrailRepository;
 import com.gzc.domain.trial.model.valobj.ActivityDiscountVO;
 import com.gzc.domain.trial.model.valobj.SkuVO;
-import com.gzc.infrastructure.dao.ICrowdTagsDetailDao;
-import com.gzc.infrastructure.dao.IGroupBuyActivityDao;
-import com.gzc.infrastructure.dao.IGroupBuyDiscountDao;
-import com.gzc.infrastructure.dao.ISkuDao;
+import com.gzc.infrastructure.dao.*;
 import com.gzc.infrastructure.dao.po.CrowdTagsDetail;
 import com.gzc.infrastructure.dao.po.GroupBuyActivity;
 import com.gzc.infrastructure.dao.po.GroupBuyDiscount;
@@ -24,6 +21,7 @@ public class TrailRepository implements ITrailRepository {
     private final IGroupBuyActivityDao activityDao;
     private final IGroupBuyDiscountDao discountDao;
     private final ICrowdTagsDetailDao crowdTagsDetailDao;
+    private final IGroupBuyOrderListDao orderListDao;
     private final IRedisService redisService;
 
 
@@ -83,5 +81,11 @@ public class TrailRepository implements ITrailRepository {
                 .build();
         Integer resNum  = crowdTagsDetailDao.queryInTagScopeByUserId(crowdTagsDetailReq);
         return resNum != 0;
+    }
+
+
+    @Override
+    public Integer queryOrderCountByActivityId(Long activityId, String userId) {
+        return orderListDao.queryOrderCountByActivityId(activityId, userId);
     }
 }

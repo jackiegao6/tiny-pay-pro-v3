@@ -25,22 +25,6 @@ public class TagNode extends AbstractNodeSupport {
 
     private final TrailNode trailNode;
     private final EndNode endNode;
-    private final ThreadPoolExecutor threadPoolExecutor;
-
-    @Override
-    protected void multiThread(TrailMarketProductEntity reqParam, DynamicContext context) throws ExecutionException, InterruptedException, TimeoutException {
-        String goodsId = reqParam.getGoodsId();
-
-        FutureTask<ActivityDiscountVO> activityDiscountVOFutureTask = new FutureTask<>(new QueryActivityAndDiscountVOFromDBThreadTask(goodsId, trailRepository));
-        threadPoolExecutor.execute(activityDiscountVOFutureTask);
-
-        ActivityDiscountVO activityDiscountVO = null;
-        try {
-            activityDiscountVO = activityDiscountVOFutureTask.get(timeout, TimeUnit.SECONDS);
-        } catch (Exception ignored) {
-        }
-        context.setActivityDiscountVO(activityDiscountVO);
-    }
 
     @Override
     protected TrailBalanceEntity doApply(TrailMarketProductEntity requestParameter, DynamicContext context) throws Exception {

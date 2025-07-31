@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 public class SwitchNode extends AbstractNodeSupport {
 
-    private final TagNode tagNode;
+    private final FilterNode filterNode;
 
     @Override
     protected TrailBalanceEntity doApply(TrailMarketProductEntity requestParameter, DynamicContext dynamicContext) throws Exception {
@@ -26,6 +26,6 @@ public class SwitchNode extends AbstractNodeSupport {
 
     @Override
     public NodeHandler<TrailMarketProductEntity, DynamicContext, TrailBalanceEntity> get(TrailMarketProductEntity reqParam, DynamicContext context) throws Exception {
-        return tagNode;
+        return filterNode;
     }
 }

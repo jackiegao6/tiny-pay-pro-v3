@@ -28,7 +28,7 @@ public class ITradeServiceTest {
     @Test
     public void test_lockMarketPayOrder() throws Exception {
         LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO = new LockMarketPayOrderRequestDTO();
-        lockMarketPayOrderRequestDTO.setUserId("gao");
+        lockMarketPayOrderRequestDTO.setUserId("gaogao");
         lockMarketPayOrderRequestDTO.setTeamId(null);
         lockMarketPayOrderRequestDTO.setActivityId(100123L);
         lockMarketPayOrderRequestDTO.setGoodsId("9890001");
@@ -41,8 +41,8 @@ public class ITradeServiceTest {
     @Test
     public void test_lockMarketPayOrder_teamId_not_null() throws Exception {
         LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO = new LockMarketPayOrderRequestDTO();
-        lockMarketPayOrderRequestDTO.setUserId("gao6");
-        lockMarketPayOrderRequestDTO.setTeamId("42700934");
+        lockMarketPayOrderRequestDTO.setUserId("gaogao");
+        lockMarketPayOrderRequestDTO.setTeamId("79575301");
         lockMarketPayOrderRequestDTO.setActivityId(100123L);
         lockMarketPayOrderRequestDTO.setGoodsId("9890001");
         lockMarketPayOrderRequestDTO.setOutTradeNo(RandomStringUtils.randomNumeric(12));
