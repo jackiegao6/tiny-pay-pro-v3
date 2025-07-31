@@ -3,8 +3,8 @@ package com.gzc.infrastructure.adapter.repository;
 import com.gzc.domain.trade.adapter.repository.ITradeRepository;
 import com.gzc.domain.trade.model.entity.req.PayActivityEntity;
 import com.gzc.domain.trade.model.entity.req.PayDiscountEntity;
-import com.gzc.domain.trade.model.entity.req.UserEntity;
-import com.gzc.domain.trade.model.entity.resp.MarketPayOrderEntity;
+import com.gzc.domain.trade.model.entity.req.TradePaySuccessEntity;
+import com.gzc.domain.trade.model.entity.resp.LockedOrderEntity;
 import com.gzc.domain.trade.model.valobj.GroupBuyProgressVO;
 import com.gzc.domain.trade.model.valobj.TradeOrderStatusEnumVO;
 import com.gzc.infrastructure.dao.IGroupBuyOrderDao;
@@ -20,18 +20,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 
 @Repository
 @Slf4j
 @RequiredArgsConstructor
 public class TradeRepository implements ITradeRepository {
 
-
     private final IGroupBuyOrderListDao orderListDao;
     private final IGroupBuyOrderDao orderDao;
 
     @Override
-    public MarketPayOrderEntity queryUnfinishedPayOrderByOutTradeNo(String userId, String outTradeNo) {
+    public LockedOrderEntity queryUnfinishedPayOrderByOutTradeNo(String userId, String outTradeNo) {
 
         GroupBuyOrderList groupBuyOrderListReq = GroupBuyOrderList.builder()
                 .userId(userId)
@@ -40,7 +40,7 @@ public class TradeRepository implements ITradeRepository {
         GroupBuyOrderList groupBuyOrderListResp = orderListDao.queryGroupBuyOrderRecordByOutTradeNo(groupBuyOrderListReq);
         if (groupBuyOrderListResp == null) return null;
         log.info("存在未完成的营销订单");
-        return MarketPayOrderEntity.builder()
+        return LockedOrderEntity.builder()
                 .orderId(groupBuyOrderListResp.getOrderId())
                 .currentPrice(groupBuyOrderListResp.getCurrentPrice())
                 .tradeOrderStatusEnumVO(TradeOrderStatusEnumVO.CREATE)
@@ -52,7 +52,7 @@ public class TradeRepository implements ITradeRepository {
     @Override
     public GroupBuyProgressVO queryGroupBuyProgress(String teamId) {
 
-        GroupBuyOrder groupBuyOrderResp = orderDao.queryGroupBuyProgress(teamId);
+        GroupBuyOrder groupBuyOrderResp = orderDao.queryGroupBuyProgressVOByTeamId(teamId);
 
         return GroupBuyProgressVO.builder()
                 .targetCount(groupBuyOrderResp.getTargetCount())
@@ -64,7 +64,7 @@ public class TradeRepository implements ITradeRepository {
 
     @Transactional(timeout = 500)
     @Override
-    public MarketPayOrderEntity lockMarketPayOrder(String userId, PayActivityEntity payActivityEntity, PayDiscountEntity payDiscountEntity) {
+    public LockedOrderEntity lockMarketPayOrder(String userId, PayActivityEntity payActivityEntity, PayDiscountEntity payDiscountEntity) {
 
         String teamId = payActivityEntity.getTeamId();
         if (StringUtils.isBlank(teamId)){
@@ -106,12 +106,81 @@ public class TradeRepository implements ITradeRepository {
                 .build();
         orderListDao.insert(groupBuyOrderListReq);
 
-        return MarketPayOrderEntity.builder()
+        return LockedOrderEntity.builder()
                 .orderId(orderId)
                 .currentPrice(payDiscountEntity.getCurrentPrice())
                 .tradeOrderStatusEnumVO(TradeOrderStatusEnumVO.CREATE)
                 .teamId(teamId)
                 .build();
+
+    }
+
+    @Override
+    public GroupBuyProgressVO querygroupBuyProgressVOByTeamId(String teamId) {
+        GroupBuyOrder groupBuyOrderResp = orderDao.queryGroupBuyProgressVOByTeamId(teamId);
+        return GroupBuyProgressVO.builder()
+                .targetCount(groupBuyOrderResp.getTargetCount())
+                .completeCount(groupBuyOrderResp.getCompleteCount())
+                .lockCount(groupBuyOrderResp.getLockCount())
+                .teamId(groupBuyOrderResp.getTeamId())
+                .activityId(groupBuyOrderResp.getActivityId())
+                .status(TradeOrderStatusEnumVO.valueOf(groupBuyOrderResp.getStatus()))
+                .build();
+    }
+
+    @Transactional
+    @Override
+    public void settlementProcess(TradePaySuccessEntity tradePaySuccessEntity, GroupBuyProgressVO groupBuyProgressVO) {
+
+        String userId = tradePaySuccessEntity.getUserId();
+        String outTradeNo = tradePaySuccessEntity.getOutTradeNo();
+        String teamId = tradePaySuccessEntity.getTeamId();
+
+        // 1. 更新未支付订单状态为已支付
+        GroupBuyOrderList groupBuyOrderListReq = new GroupBuyOrderList();
+        groupBuyOrderListReq.setUserId(userId);
+        groupBuyOrderListReq.setOutTradeNo(outTradeNo);
+        int updateOrderListStatusCount = orderListDao.updateOrderListStatus2COMPLETE(groupBuyOrderListReq);
+        if (1 != updateOrderListStatusCount) {
+            log.error("更新未支付订单状态至已支付失败");
+            throw new AppException(ResponseCode.UPDATE_ORDER_LIST_STATUS_FAILED.getInfo());
+        }
+
+        // 2. 更新拼团达成数量
+        int updateOrderCompletedCount = orderDao.updateOrderCompletedCount(teamId);
+        if (1 != updateOrderCompletedCount) {
+            log.error("更新拼团达成数量失败");
+            throw new AppException(ResponseCode.UPDATE_COMPLETED_ORDER_STATUS_FAILED.getInfo());
+        }
+
+        // 3. 更新拼团完成状态
+        Integer targetCount = groupBuyProgressVO.getTargetCount();
+        Integer completeCount = groupBuyProgressVO.getCompleteCount();
+        if (targetCount - completeCount == 1) {
+            int updateOrderStatusCount = orderDao.updateOrderStatus2COMPLETE(teamId);
+            if (1 != updateOrderStatusCount) {
+                log.error("更新组队状态至成功失败");
+                throw new AppException(ResponseCode.UPDATE_ORDER_STATUS_FAILED.getInfo());
+            }
+
+            // 查询拼团交易完成外部单号列表
+            List<String> outTradeNoList = orderListDao.queryCompletedOutTradeNoListByTeamId(teamId);
+            log.info(String.valueOf(outTradeNoList));
+            // 拼团完成写入回调任务记录
+//            NotifyTask notifyTask = new NotifyTask();
+//            notifyTask.setActivityId(groupBuyTeamEntity.getActivityId());
+//            notifyTask.setTeamId(groupBuyTeamEntity.getTeamId());
+//            notifyTask.setNotifyUrl("暂无");
+//            notifyTask.setNotifyCount(0);
+//            notifyTask.setNotifyStatus(0);
+//            notifyTask.setParameterJson(JSON.toJSONString(new HashMap<String, Object>() {{
+//                put("teamId", groupBuyTeamEntity.getTeamId());
+//                put("outTradeNoList", outTradeNoList);
+//            }}));
+//
+//            notifyTaskDao.insert(notifyTask);
+        }
+
 
     }
 }

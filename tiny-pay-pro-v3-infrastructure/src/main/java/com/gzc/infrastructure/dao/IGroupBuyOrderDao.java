@@ -22,8 +22,18 @@ public interface IGroupBuyOrderDao {
     int updateSubtractionLockCount(String teamId);
 
     /**
-     * 查询进度
+     * 更新此team下的完成态订单的数量
      */
-    GroupBuyOrder queryGroupBuyProgress(String teamId);
+    int updateOrderCompletedCount(String teamId);
+
+    /**
+     * 更新此team下的 拼团状态为全都拼完了
+     */
+    int updateOrderStatus2COMPLETE(String teamId);
+
+    /**
+     * 返回此team下的 GroupBuyOrder
+     */
+    GroupBuyOrder queryGroupBuyProgressVOByTeamId(String teamId);
 
 }

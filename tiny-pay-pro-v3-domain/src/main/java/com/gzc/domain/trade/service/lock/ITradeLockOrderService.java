@@ -2,16 +2,15 @@ package com.gzc.domain.trade.service.lock;
 
 import com.gzc.domain.trade.model.entity.req.PayActivityEntity;
 import com.gzc.domain.trade.model.entity.req.PayDiscountEntity;
-import com.gzc.domain.trade.model.entity.req.UserEntity;
-import com.gzc.domain.trade.model.entity.resp.MarketPayOrderEntity;
+import com.gzc.domain.trade.model.entity.resp.LockedOrderEntity;
 import com.gzc.domain.trade.model.valobj.GroupBuyProgressVO;
 
-public interface ITradeOrderService {
+public interface ITradeLockOrderService {
 
     /**
      * 由用户id 和 锁单编号查询 查询未支付营销订单
      */
-    MarketPayOrderEntity queryUnfinishedPayOrderByOutTradeNo(String userId, String outTradeNo);
+    LockedOrderEntity queryUnfinishedPayOrderByOutTradeNo(String userId, String outTradeNo);
 
 
     /**
@@ -23,5 +22,5 @@ public interface ITradeOrderService {
     /**
      * 锁定营销优惠支付订单
      */
-    MarketPayOrderEntity lockMarketPayOrder(String userId, PayActivityEntity payActivityEntity, PayDiscountEntity payDiscountEntity);
+    LockedOrderEntity lockMarketPayOrder(String userId, PayActivityEntity payActivityEntity, PayDiscountEntity payDiscountEntity);
 }

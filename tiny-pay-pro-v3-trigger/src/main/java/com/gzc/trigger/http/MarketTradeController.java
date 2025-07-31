@@ -1,28 +1,25 @@
 package com.gzc.trigger.http;
 
 
-import com.alibaba.fastjson2.JSON;
 import com.gzc.api.dto.req.LockMarketPayOrderRequestDTO;
 import com.gzc.api.dto.resp.LockMarketPayOrderResponseDTO;
 import com.gzc.api.response.Response;
 import com.gzc.domain.trade.model.entity.req.PayActivityEntity;
 import com.gzc.domain.trade.model.entity.req.PayDiscountEntity;
-import com.gzc.domain.trade.model.entity.resp.MarketPayOrderEntity;
+import com.gzc.domain.trade.model.entity.resp.LockedOrderEntity;
 import com.gzc.domain.trade.model.valobj.GroupBuyProgressVO;
-import com.gzc.domain.trade.service.lock.ITradeOrderService;
+import com.gzc.domain.trade.service.lock.ITradeLockOrderService;
 import com.gzc.domain.trial.model.entity.req.TrailMarketProductEntity;
 import com.gzc.domain.trial.model.entity.resp.TrailBalanceEntity;
 import com.gzc.domain.trial.service.trail.IIndexGroupBuyMarketService;
 import com.gzc.types.enums.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.util.Objects;
 
 @Slf4j
@@ -33,7 +30,7 @@ import java.util.Objects;
 public class MarketTradeController {
 
     private final IIndexGroupBuyMarketService indexGroupBuyMarketService;
-    private final ITradeOrderService tradeOrderService;
+    private final ITradeLockOrderService tradeOrderService;
 
 
     @GetMapping("/lock-order")
@@ -47,13 +44,13 @@ public class MarketTradeController {
 
 
         // 查询 outTradeNo 是否已经存在交易记录
-        MarketPayOrderEntity marketPayOrderEntity = tradeOrderService.queryUnfinishedPayOrderByOutTradeNo(userId, outTradeNo);// todo
-        if (marketPayOrderEntity != null) {
+        LockedOrderEntity lockedOrderEntity = tradeOrderService.queryUnfinishedPayOrderByOutTradeNo(userId, outTradeNo);// todo
+        if (lockedOrderEntity != null) {
             log.info("用户有未完结的订单，交易单号为：{}", outTradeNo);
             LockMarketPayOrderResponseDTO lockMarketPayOrderResponseDTO = LockMarketPayOrderResponseDTO.builder()
-                    .orderId(marketPayOrderEntity.getOrderId())
-                    .currentPrice(marketPayOrderEntity.getCurrentPrice())
-                    .tradeOrderStatus(marketPayOrderEntity.getTradeOrderStatusEnumVO().getCode())
+                    .orderId(lockedOrderEntity.getOrderId())
+                    .currentPrice(lockedOrderEntity.getCurrentPrice())
+                    .tradeOrderStatus(lockedOrderEntity.getTradeOrderStatusEnumVO().getCode())
                     .build();
 
             return Response.<LockMarketPayOrderResponseDTO>builder()
@@ -62,10 +59,6 @@ public class MarketTradeController {
                     .data(lockMarketPayOrderResponseDTO)
                     .build();
         }
-
-
-        // todo 判断拼团锁单是否在有效时间内
-
 
 
         // 判断拼团锁单是否完成了目标
@@ -88,7 +81,7 @@ public class MarketTradeController {
                 .build());
 
 
-        marketPayOrderEntity = tradeOrderService.lockMarketPayOrder(userId,
+        lockedOrderEntity = tradeOrderService.lockMarketPayOrder(userId,
                 PayActivityEntity.builder()
                         .teamId(teamId)
                         .activityId(activityId)
@@ -110,10 +103,10 @@ public class MarketTradeController {
                 .code(ResponseCode.SUCCESS.getCode())
                 .info(ResponseCode.SUCCESS.getInfo())
                 .data(LockMarketPayOrderResponseDTO.builder()
-                        .orderId(marketPayOrderEntity.getOrderId())
-                        .teamId(marketPayOrderEntity.getTeamId())
-                        .currentPrice(marketPayOrderEntity.getCurrentPrice())
-                        .tradeOrderStatus(marketPayOrderEntity.getTradeOrderStatusEnumVO().getCode())
+                        .orderId(lockedOrderEntity.getOrderId())
+                        .teamId(lockedOrderEntity.getTeamId())
+                        .currentPrice(lockedOrderEntity.getCurrentPrice())
+                        .tradeOrderStatus(lockedOrderEntity.getTradeOrderStatusEnumVO().getCode())
                         .build())
                 .build();
     }

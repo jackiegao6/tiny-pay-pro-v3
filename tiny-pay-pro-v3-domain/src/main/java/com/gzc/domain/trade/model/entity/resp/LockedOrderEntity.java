@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MarketPayOrderEntity {
+public class LockedOrderEntity {
 
     /** 预购订单ID */
     private String orderId;
