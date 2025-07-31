@@ -15,4 +15,7 @@
         values (#{tagId}, #{userId}, now(), now())
     </insert>
 
+    <select id="queryInTagScopeByUserId" parameterType="com.gzc.infrastructure.dao.po.CrowdTagsDetail" resultType="java.lang.Integer">
+        select count(*) from crowd_tags_detail where tag_id = #{tagId} and user_id = #{userId}
+    </select>
 </mapper>

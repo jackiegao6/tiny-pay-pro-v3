@@ -7,4 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface ICrowdTagsDetailDao {
 
     void addCrowdTagsUserId(CrowdTagsDetail crowdTagsDetailReq);
+
+    Integer queryInTagScopeByUserId(CrowdTagsDetail crowdTagsDetailReq);
+
 }

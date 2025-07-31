@@ -21,10 +21,10 @@ public class ITrailServiceTest {
     private IIndexGroupBuyMarketService iIndexGroupBuyMarketService;
 
     @Test
-    public void test_indexMarketTrial() throws Exception {
+    public void test_normal_indexMarketTrial() throws Exception {
 
         TrailMarketProductEntity trailMarketProductEntity = new TrailMarketProductEntity();
-        trailMarketProductEntity.setUserId("gzc");
+        trailMarketProductEntity.setUserId("gzc_normal");
         trailMarketProductEntity.setGoodsId("9890001");
 
         TrailBalanceEntity trailBalanceEntity = iIndexGroupBuyMarketService.indexMarketTrial(trailMarketProductEntity);
@@ -33,11 +33,23 @@ public class ITrailServiceTest {
     }
 
     @Test
-    public void test_wrong_indexMarketTrial() throws Exception {
+    public void test_wrong_product_indexMarketTrial() throws Exception {
 
         TrailMarketProductEntity trailMarketProductEntity = new TrailMarketProductEntity();
         trailMarketProductEntity.setUserId("gzc");
         trailMarketProductEntity.setGoodsId("9890000");
+
+        TrailBalanceEntity trailBalanceEntity = iIndexGroupBuyMarketService.indexMarketTrial(trailMarketProductEntity);
+
+        log.info("返回结果:{}", JSON.toJSONString(trailBalanceEntity));
+    }
+
+    @Test
+    public void test_in_tag_indexMarketTrial() throws Exception {
+
+        TrailMarketProductEntity trailMarketProductEntity = new TrailMarketProductEntity();
+        trailMarketProductEntity.setUserId("gzc");
+        trailMarketProductEntity.setGoodsId("9890001");
 
         TrailBalanceEntity trailBalanceEntity = iIndexGroupBuyMarketService.indexMarketTrial(trailMarketProductEntity);
 

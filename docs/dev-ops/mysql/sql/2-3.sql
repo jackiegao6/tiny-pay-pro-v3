@@ -40,7 +40,7 @@ CREATE TABLE `group_buy_activity` (
                                       `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '活动状态（0创建、1生效、2过期、3废弃）',
                                       `start_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '活动开始时间',
                                       `end_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '活动结束时间',
-                                      `tag_id` varchar(8) DEFAULT NULL COMMENT '人群标签规则标识',
+                                      `tag_id` varchar(32) DEFAULT NULL COMMENT '人群ID',
                                       `tag_scope` varchar(4) DEFAULT NULL COMMENT '人群标签规则范围（多选；1可见限制、2参与限制）',
                                       `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                       `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -49,7 +49,7 @@ CREATE TABLE `group_buy_activity` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='拼团活动';
 INSERT INTO `group_buy_activity` (`id`, `activity_id`, `activity_name`, `goods_id`, `discount_id`, `group_type`, `take_limit_count`, `target`, `valid_time`, `status`, `start_time`, `end_time`, `tag_id`, `tag_scope`, `create_time`, `update_time`)
 VALUES
-    (1,100123,'测试活动','9890001','25120207',0,1,1,15,0,'2024-12-07 10:19:40','2024-12-07 10:19:40','1','1','2024-12-07 10:19:40','2024-12-07 11:47:27');
+    (1,100123,'测试活动','9890001','25120207',0,1,1,15,0,'2024-12-07 10:19:40','2024-12-07 10:19:40','RQ_KJHKL98UU78H66554GFDV','1','2024-12-07 10:19:40','2024-12-07 11:47:27');
 
 
 

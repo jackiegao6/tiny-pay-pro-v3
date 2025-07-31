@@ -38,19 +38,13 @@ public class TrailNode extends AbstractNodeSupport {
 
         FutureTask<SkuVO> skuVOFutureTask = new FutureTask<>(new QuerySkuVOFromDBThreadTask(goodsId, trailRepository));
         threadPoolExecutor.execute(skuVOFutureTask);
-        FutureTask<ActivityDiscountVO> activityDiscountVOFutureTask = new FutureTask<>(new QueryActivityAndDiscountVOFromDBThreadTask(goodsId, trailRepository));
-        threadPoolExecutor.execute(activityDiscountVOFutureTask);
 
         SkuVO skuVO = null;
-        ActivityDiscountVO activityDiscountVO = null;
         try {
             skuVO = skuVOFutureTask.get(timeout, TimeUnit.SECONDS);
-            activityDiscountVO = activityDiscountVOFutureTask.get(timeout, TimeUnit.SECONDS);
         } catch (Exception ignored) {
         }
         context.setSkuVO(skuVO);
-        context.setActivityDiscountVO(activityDiscountVO);
-
     }
 
     @Override
@@ -65,7 +59,7 @@ public class TrailNode extends AbstractNodeSupport {
         SkuVO skuVO = context.getSkuVO();
 
         if (discountVO == null || skuVO == null){
-            router(reqParam, context);
+            return router(reqParam, context);
         }
 
         String discountServiceKey = discountVO.getMarketPlan();

@@ -9,4 +9,7 @@ public interface ITrailRepository {
     SkuVO querySkuVOByGoodsId(String goodsId);
 
     ActivityDiscountVO queryActivityAndDiscountVOByGoodsId(String goodsId);
+
+    boolean queryInTagScopeByUserId(String tagId, String userId);
+
 }

@@ -1,11 +1,13 @@
 package com.gzc.domain.trial.model.valobj;
 
+import com.gzc.types.common.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Getter
 @Builder
@@ -94,6 +96,25 @@ public class ActivityDiscountVO {
          * 营销优惠表达式
          */
         private String marketExpr;
+    }
+
+    /**
+     * 可见限制 & 参与限制
+     * 只要存在这样一个值，那么首次获得的默认值就是 false
+     */
+    public boolean[] getTagRestrictFlag() {
+        String[] split = this.tagScope.split(Constants.SPLIT);
+        boolean[] res = new boolean[2];
+        for (String tagRestrict : split) {
+            if (Objects.equals(tagRestrict, "1")){
+                res[0] = true;
+                continue;
+            }
+            if (Objects.equals(tagRestrict, "2")){
+                res[1] = true;
+            }
+        }
+        return res;
     }
 
 

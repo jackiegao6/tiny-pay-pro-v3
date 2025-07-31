@@ -19,4 +19,6 @@ public class DynamicContext {
     private SkuVO skuVO;
     private ActivityDiscountVO activityDiscountVO;
     private BigDecimal currentPrice;
+    private boolean isVisible;
+    private boolean isJoin;
 }

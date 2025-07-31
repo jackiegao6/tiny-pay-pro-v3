@@ -27,4 +27,15 @@ public class ApiTest {
         log.info("测试完成");
     }
 
+    @Test
+    public void test_trailRepository_2() {
+        String tagId = "RQ_KJHKL98UU78H66554GFDV";
+        String userId = "gzc";
+
+        boolean res = trailRepository.queryInTagScopeByUserId(tagId, userId);
+        log.info(String.valueOf(res));
+        log.info("测试完成");
+    }
+
+
 }

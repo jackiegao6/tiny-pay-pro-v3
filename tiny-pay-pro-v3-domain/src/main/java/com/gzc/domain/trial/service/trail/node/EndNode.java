@@ -24,16 +24,16 @@ public class EndNode extends AbstractNodeSupport {
         BigDecimal currentPrice = dynamicContext.getCurrentPrice();
 
         return TrailBalanceEntity.builder()
-                .goodsId(skuVO.getGoodsId())
-                .goodsName(skuVO.getGoodsName())
-                .originalPrice(skuVO.getOriginalPrice())
+                .goodsId(skuVO != null ? skuVO.getGoodsId() : null)
+                .goodsName(skuVO != null ? skuVO.getGoodsName() : null)
+                .originalPrice(skuVO != null ? skuVO.getOriginalPrice() : null)
                 .deductionPrice(new BigDecimal("0.00"))
                 .currentPrice(currentPrice)
                 .target(activityDiscountVO.getTarget())
                 .startTime(activityDiscountVO.getStartTime())
                 .endTime(activityDiscountVO.getEndTime())
-                .isVisible(true)//todo
-                .isEnable(true)
+                .isVisible(dynamicContext.isVisible())
+                .isEnable(dynamicContext.isJoin())
                 .build();
     }
 
