@@ -31,7 +31,7 @@ public class ITradeServiceTest {
     @Test
     public void test_lockMarketPayOrder() throws Exception {
         LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO = new LockMarketPayOrderRequestDTO();
-        lockMarketPayOrderRequestDTO.setUserId("gaogao3");
+        lockMarketPayOrderRequestDTO.setUserId("xiaoming1");
         lockMarketPayOrderRequestDTO.setTeamId(null);
         lockMarketPayOrderRequestDTO.setActivityId(100123L);
         lockMarketPayOrderRequestDTO.setGoodsId("9890001");
@@ -44,8 +44,8 @@ public class ITradeServiceTest {
     @Test
     public void test_lockMarketPayOrder_teamId_not_null() throws Exception {
         LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO = new LockMarketPayOrderRequestDTO();
-        lockMarketPayOrderRequestDTO.setUserId("gaogao6");
-        lockMarketPayOrderRequestDTO.setTeamId("05843870");
+        lockMarketPayOrderRequestDTO.setUserId("xiaoming2");
+        lockMarketPayOrderRequestDTO.setTeamId("66406366");
         lockMarketPayOrderRequestDTO.setActivityId(100123L);
         lockMarketPayOrderRequestDTO.setGoodsId("9890001");
         lockMarketPayOrderRequestDTO.setOutTradeNo(RandomStringUtils.randomNumeric(12));
@@ -56,9 +56,9 @@ public class ITradeServiceTest {
     @Test
     public void test_settlementMarketPayOrder() throws Exception {
         TradePaySuccessEntity tradePaySuccessEntity = new TradePaySuccessEntity();
-        tradePaySuccessEntity.setUserId("gaogao3");
-        tradePaySuccessEntity.setTeamId("05843870");
-        tradePaySuccessEntity.setOutTradeNo("815824089136");
+        tradePaySuccessEntity.setUserId("xiaoming1");
+        tradePaySuccessEntity.setTeamId("66406366");
+        tradePaySuccessEntity.setOutTradeNo("985378744496");
         TradePaySettlementEntity tradePaySettlementEntity = tradeSettlementService.settlementMarketPayOrder(tradePaySuccessEntity);
         log.info("请求参数:{}", JSON.toJSONString(tradePaySuccessEntity));
         log.info("测试结果:{}", JSON.toJSONString(tradePaySettlementEntity));

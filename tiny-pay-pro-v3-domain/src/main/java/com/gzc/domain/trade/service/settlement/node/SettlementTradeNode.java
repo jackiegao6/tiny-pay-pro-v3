@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -19,11 +21,10 @@ public class SettlementTradeNode extends AbstractNodeSupport {
     @Override
     public TradePaySettlementEntity apply(TradePaySuccessEntity reqParam, DynamicContext context) throws Exception {
 
-        // 1.查询组团进度信息
-        String teamId = reqParam.getTeamId();
-        GroupBuyProgressVO groupBuyProgressVO = tradeRepository.querygroupBuyProgressVOByTeamId(teamId);
-
+        GroupBuyProgressVO groupBuyProgressVO = context.getGroupBuyProgressVO();
         // 2.拼团交易结算
+        Date outTradeTime = context.getOutTradeTime();
+        groupBuyProgressVO.setOutTradeTime(outTradeTime);
         tradeRepository.settlementProcess(reqParam, groupBuyProgressVO);
 
         return router(reqParam, context);

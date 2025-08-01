@@ -44,7 +44,7 @@ public class MarketTradeController {
 
 
         // 查询 outTradeNo 是否已经存在交易记录
-        LockedOrderEntity lockedOrderEntity = tradeLockOrderService.queryUnfinishedPayOrderByOutTradeNo(userId, outTradeNo);// todo
+        LockedOrderEntity lockedOrderEntity = tradeLockOrderService.queryUnfinishedPayOrderByOutTradeNo(userId, outTradeNo);
         if (lockedOrderEntity != null) {
             log.info("用户有未完结的订单，交易单号为：{}", outTradeNo);
             LockMarketPayOrderResponseDTO lockMarketPayOrderResponseDTO = LockMarketPayOrderResponseDTO.builder()
@@ -85,7 +85,7 @@ public class MarketTradeController {
                 PayActivityEntity.builder()
                         .teamId(teamId)
                         .activityId(activityId)
-                        .startTime(trialBalanceEntity.getStartTime())// todo
+                        .startTime(trialBalanceEntity.getStartTime())
                         .endTime(trialBalanceEntity.getEndTime())
                         .validTime(trialBalanceEntity.getValidTime())
                         .targetCount(trialBalanceEntity.getTarget())

@@ -59,7 +59,7 @@
     <update id="updateOrderListStatus2COMPLETE" parameterType="com.gzc.infrastructure.dao.po.GroupBuyOrderList">
         update group_buy_order_list
         set status = 1,
-            out_trade_time = now()
+            out_trade_time = #{outTradeTime}
         where out_trade_no = #{outTradeNo} and user_id = #{userId}
     </update>
 

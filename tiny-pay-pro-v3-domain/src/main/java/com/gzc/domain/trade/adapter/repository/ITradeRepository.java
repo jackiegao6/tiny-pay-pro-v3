@@ -6,6 +6,8 @@ import com.gzc.domain.trade.model.entity.req.TradePaySuccessEntity;
 import com.gzc.domain.trade.model.entity.resp.LockedOrderEntity;
 import com.gzc.domain.trade.model.valobj.GroupBuyProgressVO;
 
+import java.util.Date;
+
 public interface ITradeRepository {
 
 

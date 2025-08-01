@@ -1,15 +1,14 @@
 package com.gzc.domain.trade.model.valobj;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.Date;
 
 /**
  * @description 拼团进度值对象
  */
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,5 +27,9 @@ public class GroupBuyProgressVO {
     private Long activityId;
     /** 状态（0-拼单中、1-完成、2-失败） */
     private TradeOrderStatusEnumVO status;
+
+    private Date validEndTime;
+    private Date outTradeTime;
+
 
 }

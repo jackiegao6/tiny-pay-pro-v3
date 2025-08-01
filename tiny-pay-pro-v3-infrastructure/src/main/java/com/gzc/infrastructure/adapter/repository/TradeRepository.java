@@ -1,5 +1,7 @@
 package com.gzc.infrastructure.adapter.repository;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import com.gzc.domain.trade.adapter.repository.ITradeRepository;
 import com.gzc.domain.trade.model.entity.req.PayActivityEntity;
 import com.gzc.domain.trade.model.entity.req.PayDiscountEntity;
@@ -20,6 +22,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -72,7 +77,9 @@ public class TradeRepository implements ITradeRepository {
             // 创团
             teamId = RandomStringUtils.randomNumeric(8);
             // 构建拼团订单
-            Date validStartTime = new Date();
+            ZoneId shanghaiZone = ZoneId.of("Asia/Shanghai");
+            LocalDateTime validStartTimeLDT = LocalDateTime.now();
+            Date validStartTime = Date.from(validStartTimeLDT.atZone(shanghaiZone).toInstant());
             Integer validTime = payActivityEntity.getValidTime();
             Date validEndTime = new Date(validStartTime.getTime() + validTime * 60 * 1000L);
 
@@ -135,6 +142,7 @@ public class TradeRepository implements ITradeRepository {
                 .teamId(groupBuyOrderResp.getTeamId())
                 .activityId(groupBuyOrderResp.getActivityId())
                 .status(TradeOrderStatusEnumVO.valueOf(groupBuyOrderResp.getStatus()))
+                .validEndTime(groupBuyOrderResp.getValidEndTime())
                 .build();
     }
 
@@ -150,6 +158,7 @@ public class TradeRepository implements ITradeRepository {
         GroupBuyOrderList groupBuyOrderListReq = new GroupBuyOrderList();
         groupBuyOrderListReq.setUserId(userId);
         groupBuyOrderListReq.setOutTradeNo(outTradeNo);
+        groupBuyOrderListReq.setOutTradeTime(groupBuyProgressVO.getOutTradeTime());
         int updateOrderListStatusCount = orderListDao.updateOrderListStatus2COMPLETE(groupBuyOrderListReq);
         if (1 != updateOrderListStatusCount) {
             log.error("更新未支付订单状态至已支付失败");
