@@ -31,12 +31,12 @@ public class ITradeServiceTest {
     @Test
     public void test_lockMarketPayOrder() throws Exception {
         LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO = new LockMarketPayOrderRequestDTO();
-        lockMarketPayOrderRequestDTO.setUserId("xiaoming1");
+        lockMarketPayOrderRequestDTO.setUserId("user02");
         lockMarketPayOrderRequestDTO.setTeamId(null);
         lockMarketPayOrderRequestDTO.setActivityId(100123L);
         lockMarketPayOrderRequestDTO.setGoodsId("9890001");
         lockMarketPayOrderRequestDTO.setOutTradeNo(RandomStringUtils.randomNumeric(12));
-        lockMarketPayOrderRequestDTO.setNotifyUrl("http://localhost:8091/test");
+        lockMarketPayOrderRequestDTO.setNotifyUrl("http://127.0.0.1:8091/api/v1/test/group_buy_notify");
         Response<LockMarketPayOrderResponseDTO> lockMarketPayOrderResponseDTOResponse = marketTradeController.lockMarketPayOrder(lockMarketPayOrderRequestDTO);
         log.info("测试结果 req:{} \nres:{}", JSON.toJSONString(lockMarketPayOrderRequestDTO), JSON.toJSONString(lockMarketPayOrderResponseDTOResponse));
     }
@@ -45,12 +45,12 @@ public class ITradeServiceTest {
     @Test
     public void test_lockMarketPayOrder_teamId_not_null() throws Exception {
         LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO = new LockMarketPayOrderRequestDTO();
-        lockMarketPayOrderRequestDTO.setUserId("xiaoming3");
-        lockMarketPayOrderRequestDTO.setTeamId("77491443");
+        lockMarketPayOrderRequestDTO.setUserId("user04");
+        lockMarketPayOrderRequestDTO.setTeamId("98580535");
         lockMarketPayOrderRequestDTO.setActivityId(100123L);
         lockMarketPayOrderRequestDTO.setGoodsId("9890001");
         lockMarketPayOrderRequestDTO.setOutTradeNo(RandomStringUtils.randomNumeric(12));
-        lockMarketPayOrderRequestDTO.setNotifyUrl("http://localhost:8091/test");
+        lockMarketPayOrderRequestDTO.setNotifyUrl("http://127.0.0.1:8091/api/v1/test/group_buy_notify");
         Response<LockMarketPayOrderResponseDTO> lockMarketPayOrderResponseDTOResponse = marketTradeController.lockMarketPayOrder(lockMarketPayOrderRequestDTO);
         log.info("测试结果 req:{} \nres:{}", JSON.toJSONString(lockMarketPayOrderRequestDTO), JSON.toJSONString(lockMarketPayOrderResponseDTOResponse));
     }
@@ -58,9 +58,9 @@ public class ITradeServiceTest {
     @Test
     public void test_settlementMarketPayOrder() throws Exception {
         TradePaySuccessEntity tradePaySuccessEntity = new TradePaySuccessEntity();
-        tradePaySuccessEntity.setUserId("xiaoming2");
-        tradePaySuccessEntity.setTeamId("77491443");
-        tradePaySuccessEntity.setOutTradeNo("337736036119");
+        tradePaySuccessEntity.setUserId("user02");
+        tradePaySuccessEntity.setTeamId("98580535");
+        tradePaySuccessEntity.setOutTradeNo("870213744006");
         TradePaySettlementEntity tradePaySettlementEntity = tradeSettlementService.settlementMarketPayOrder(tradePaySuccessEntity);
         log.info("请求参数:{}", JSON.toJSONString(tradePaySuccessEntity));
         log.info("测试结果:{}", JSON.toJSONString(tradePaySettlementEntity));

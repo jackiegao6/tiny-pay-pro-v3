@@ -1,7 +1,6 @@
 package com.gzc.infrastructure.adapter.repository;
 
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson2.JSON;
 import com.gzc.domain.trade.adapter.repository.ITradeRepository;
 import com.gzc.domain.trade.model.entity.req.PayActivityEntity;
@@ -9,6 +8,7 @@ import com.gzc.domain.trade.model.entity.req.PayDiscountEntity;
 import com.gzc.domain.trade.model.entity.req.TradePaySuccessEntity;
 import com.gzc.domain.trade.model.entity.resp.LockedOrderEntity;
 import com.gzc.domain.trade.model.valobj.GroupBuyProgressVO;
+import com.gzc.domain.trade.model.valobj.NotifyTaskVO;
 import com.gzc.domain.trade.model.valobj.TradeOrderStatusEnumVO;
 import com.gzc.infrastructure.dao.IGroupBuyOrderDao;
 import com.gzc.infrastructure.dao.IGroupBuyOrderListDao;
@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -215,6 +215,33 @@ public class TradeRepository implements ITradeRepository {
             notifyTaskDao.insert(notifyTask);
         }
 
+    }
 
+    @Override
+    public List<NotifyTaskVO> queryUnExecutedNotifyTaskList() {
+        List<NotifyTask> notifyTasks = notifyTaskDao.queryUnExecutedNotifyTaskList();
+        return BeanUtil.copyToList(notifyTasks, NotifyTaskVO.class);
+    }
+
+    @Override
+    public List<NotifyTaskVO> queryUnExecutedNotifyTaskList(String teamId) {
+        NotifyTask notifyTask = notifyTaskDao.queryUnExecutedNotifyTaskByTeamId(teamId);
+        NotifyTaskVO notifyTaskVO = BeanUtil.copyProperties(notifyTask, NotifyTaskVO.class);
+        return Collections.singletonList(notifyTaskVO);
+    }
+
+    @Override
+    public int updateNotifyTaskStatusSuccess(String teamId) {
+        return notifyTaskDao.updateNotifyTaskStatusSuccess(teamId);
+    }
+
+    @Override
+    public int updateNotifyTaskStatusError(String teamId) {
+        return notifyTaskDao.updateNotifyTaskStatusError(teamId);
+    }
+
+    @Override
+    public int updateNotifyTaskStatusRetry(String teamId) {
+        return notifyTaskDao.updateNotifyTaskStatusRetry(teamId);
     }
 }

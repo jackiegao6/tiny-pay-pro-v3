@@ -24,7 +24,7 @@
         select activity_id, team_id, notify_url, notify_count, notify_status, parameter_json
         from notify_task
         where notify_status in (0, 2)
-        limit 50
+        limit 5
     </select>
 
     <select id="queryUnExecutedNotifyTaskByTeamId" resultMap="dataMap">

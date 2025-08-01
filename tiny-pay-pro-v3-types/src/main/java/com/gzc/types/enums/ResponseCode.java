@@ -23,6 +23,7 @@ public enum ResponseCode {
     UPDATE_COMPLETED_ORDER_STATUS_FAILED(1008, "更新拼团达成数量失败"),
     UPDATE_ORDER_STATUS_FAILED(1009, "更新组队状态至成功失败"),
     WRONG_TIME_FOR_OUT_TRADE(1010, "订单交易时间不在拼团有效时间范围内"),
+    NOTIFY_API_ERROR(1011, "拼团回调 HTTP 接口服务异常"),
     ;
 
     private Integer code;

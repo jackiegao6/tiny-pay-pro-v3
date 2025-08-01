@@ -1,10 +1,8 @@
 package com.gzc.domain.trade.service.settlement;
 
 
-import com.gzc.domain.trade.adapter.repository.ITradeRepository;
 import com.gzc.domain.trade.model.entity.req.TradePaySuccessEntity;
 import com.gzc.domain.trade.model.entity.resp.TradePaySettlementEntity;
-import com.gzc.domain.trade.model.valobj.GroupBuyProgressVO;
 import com.gzc.domain.trade.service.settlement.factory.DefaultTradeNodeFactory;
 import com.gzc.types.design.framework.tree.NodeHandler;
 import lombok.RequiredArgsConstructor;
