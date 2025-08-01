@@ -15,6 +15,8 @@
         <result column="current_price" property="deductionPrice"/>
         <result column="status" property="status"/>
         <result column="out_trade_no" property="outTradeNo"/>
+        <result column="out_trade_time" property="outTradeTime"/>
+        <result column="biz_id" property="bizId"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
@@ -23,18 +25,20 @@
         insert into group_buy_order_list(
             user_id, team_id, order_id, activity_id, start_time,
             end_time, goods_id, original_price,
-            current_price, status, out_trade_no, create_time, update_time
+            current_price, status, out_trade_no, out_trade_time,
+                biz_id, create_time, update_time
         )
         values(
                   #{userId}, #{teamId}, #{orderId}, #{activityId}, #{startTime},
                   #{endTime}, #{goodsId}, #{originalPrice},
-                  #{currentPrice}, #{status}, #{outTradeNo}, now(), now()
+                  #{currentPrice}, #{status}, #{outTradeNo}, #{outTradeTime},#{bizId}, now(), now()
               )
     </insert>
 
     <select id="queryGroupBuyOrderRecordByOutTradeNo" parameterType="com.gzc.infrastructure.dao.po.GroupBuyOrderList" resultMap="dataMap">
         select user_id, team_id, order_id, activity_id, start_time,
-               end_time, goods_id, original_price, current_price, status
+               end_time, goods_id, original_price, current_price, status, out_trade_time,
+               biz_id
         from group_buy_order_list
         where out_trade_no = #{outTradeNo} and user_id = #{userId} and status = 0
     </select>
@@ -54,7 +58,8 @@
 
     <update id="updateOrderListStatus2COMPLETE" parameterType="com.gzc.infrastructure.dao.po.GroupBuyOrderList">
         update group_buy_order_list
-        set status = 1
+        set status = 1,
+            out_trade_time = now()
         where out_trade_no = #{outTradeNo} and user_id = #{userId}
     </update>
 

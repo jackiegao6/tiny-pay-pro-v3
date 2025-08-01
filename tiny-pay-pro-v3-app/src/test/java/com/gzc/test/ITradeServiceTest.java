@@ -44,8 +44,8 @@ public class ITradeServiceTest {
     @Test
     public void test_lockMarketPayOrder_teamId_not_null() throws Exception {
         LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO = new LockMarketPayOrderRequestDTO();
-        lockMarketPayOrderRequestDTO.setUserId("gaogao5");
-        lockMarketPayOrderRequestDTO.setTeamId("93526380");
+        lockMarketPayOrderRequestDTO.setUserId("gaogao6");
+        lockMarketPayOrderRequestDTO.setTeamId("05843870");
         lockMarketPayOrderRequestDTO.setActivityId(100123L);
         lockMarketPayOrderRequestDTO.setGoodsId("9890001");
         lockMarketPayOrderRequestDTO.setOutTradeNo(RandomStringUtils.randomNumeric(12));
@@ -54,11 +54,11 @@ public class ITradeServiceTest {
     }
 
     @Test
-    public void test_settlementMarketPayOrder() {
+    public void test_settlementMarketPayOrder() throws Exception {
         TradePaySuccessEntity tradePaySuccessEntity = new TradePaySuccessEntity();
-        tradePaySuccessEntity.setUserId("gao");
-        tradePaySuccessEntity.setOutTradeNo("876487474864");
-        tradePaySuccessEntity.setTeamId("42700934");
+        tradePaySuccessEntity.setUserId("gaogao3");
+        tradePaySuccessEntity.setTeamId("05843870");
+        tradePaySuccessEntity.setOutTradeNo("815824089136");
         TradePaySettlementEntity tradePaySettlementEntity = tradeSettlementService.settlementMarketPayOrder(tradePaySuccessEntity);
         log.info("请求参数:{}", JSON.toJSONString(tradePaySuccessEntity));
         log.info("测试结果:{}", JSON.toJSONString(tradePaySettlementEntity));

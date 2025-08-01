@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class IndexGroupBuyMarketService implements IIndexGroupBuyMarketService{
+public class TrailService implements ITrailService {
 
     private final DefaultTrailNodeFactory defaultActivityStrategyFactory;
 

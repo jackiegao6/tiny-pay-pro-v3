@@ -33,6 +33,7 @@ public class EndNode extends AbstractNodeSupport {
                 .target(activityDiscountVO.getTarget())
                 .startTime(activityDiscountVO.getStartTime())
                 .endTime(activityDiscountVO.getEndTime())
+                .validTime(activityDiscountVO.getValidTime())
                 .isVisible(dynamicContext.isVisible())
                 .isEnable(dynamicContext.isJoin())
                 .build();

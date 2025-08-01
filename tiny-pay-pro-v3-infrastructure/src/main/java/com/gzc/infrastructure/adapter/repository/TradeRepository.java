@@ -20,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -71,6 +72,10 @@ public class TradeRepository implements ITradeRepository {
             // 创团
             teamId = RandomStringUtils.randomNumeric(8);
             // 构建拼团订单
+            Date validStartTime = new Date();
+            Integer validTime = payActivityEntity.getValidTime();
+            Date validEndTime = new Date(validStartTime.getTime() + validTime * 60 * 1000L);
+
             GroupBuyOrder groupBuyOrder = GroupBuyOrder.builder()
                     .teamId(teamId)
                     .activityId(payActivityEntity.getActivityId())
@@ -80,6 +85,8 @@ public class TradeRepository implements ITradeRepository {
                     .targetCount(payActivityEntity.getTargetCount())
                     .completeCount(0)
                     .lockCount(1)
+                    .validStartTime(validStartTime)
+                    .validEndTime(validEndTime)
                     .build();
 
             // 写入记录
@@ -91,6 +98,8 @@ public class TradeRepository implements ITradeRepository {
         }
 
         String orderId = RandomStringUtils.randomNumeric(12);
+        String bizId = payActivityEntity.getActivityId() + "-" + userId;
+
         GroupBuyOrderList groupBuyOrderListReq = GroupBuyOrderList.builder()
                 .userId(userId)
                 .teamId(teamId)
@@ -103,6 +112,7 @@ public class TradeRepository implements ITradeRepository {
                 .currentPrice(payDiscountEntity.getCurrentPrice())
                 .status(TradeOrderStatusEnumVO.CREATE.getCode())
                 .outTradeNo(payDiscountEntity.getOutTradeNo())
+                .bizId(bizId)
                 .build();
         orderListDao.insert(groupBuyOrderListReq);
 

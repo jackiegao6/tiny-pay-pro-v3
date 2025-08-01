@@ -30,6 +30,8 @@ public class TrailBalanceEntity {
     private Date startTime;
     /** 拼团结束时间 */
     private Date endTime;
+    /*拼团有效时间*/
+    private Integer validTime;
     /** 是否可见拼团 */
     private Boolean isVisible;
     /** 是否可参与进团 */

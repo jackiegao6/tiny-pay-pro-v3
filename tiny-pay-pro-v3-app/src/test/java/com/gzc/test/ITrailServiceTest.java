@@ -3,7 +3,7 @@ package com.gzc.test;
 import com.alibaba.fastjson2.JSON;
 import com.gzc.domain.trial.model.entity.req.TrailMarketProductEntity;
 import com.gzc.domain.trial.model.entity.resp.TrailBalanceEntity;
-import com.gzc.domain.trial.service.trail.IIndexGroupBuyMarketService;
+import com.gzc.domain.trial.service.trail.ITrailService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 public class ITrailServiceTest {
 
     @Resource
-    private IIndexGroupBuyMarketService iIndexGroupBuyMarketService;
+    private ITrailService iTrailService;
 
     @Test
     public void test_normal_indexMarketTrial() throws Exception {
@@ -27,7 +27,7 @@ public class ITrailServiceTest {
         trailMarketProductEntity.setUserId("gzc_normal");
         trailMarketProductEntity.setGoodsId("9890001");
 
-        TrailBalanceEntity trailBalanceEntity = iIndexGroupBuyMarketService.indexMarketTrial(trailMarketProductEntity);
+        TrailBalanceEntity trailBalanceEntity = iTrailService.indexMarketTrial(trailMarketProductEntity);
 
         log.info("返回结果:{}", JSON.toJSONString(trailBalanceEntity));
     }
@@ -39,7 +39,7 @@ public class ITrailServiceTest {
         trailMarketProductEntity.setUserId("gzc");
         trailMarketProductEntity.setGoodsId("9890000");
 
-        TrailBalanceEntity trailBalanceEntity = iIndexGroupBuyMarketService.indexMarketTrial(trailMarketProductEntity);
+        TrailBalanceEntity trailBalanceEntity = iTrailService.indexMarketTrial(trailMarketProductEntity);
 
         log.info("返回结果:{}", JSON.toJSONString(trailBalanceEntity));
     }
@@ -51,7 +51,7 @@ public class ITrailServiceTest {
         trailMarketProductEntity.setUserId("gzc");
         trailMarketProductEntity.setGoodsId("9890001");
 
-        TrailBalanceEntity trailBalanceEntity = iIndexGroupBuyMarketService.indexMarketTrial(trailMarketProductEntity);
+        TrailBalanceEntity trailBalanceEntity = iTrailService.indexMarketTrial(trailMarketProductEntity);
 
         log.info("返回结果:{}", JSON.toJSONString(trailBalanceEntity));
     }

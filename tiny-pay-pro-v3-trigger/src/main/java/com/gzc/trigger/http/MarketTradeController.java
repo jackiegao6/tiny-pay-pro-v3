@@ -11,7 +11,7 @@ import com.gzc.domain.trade.model.valobj.GroupBuyProgressVO;
 import com.gzc.domain.trade.service.lock.ITradeLockOrderService;
 import com.gzc.domain.trial.model.entity.req.TrailMarketProductEntity;
 import com.gzc.domain.trial.model.entity.resp.TrailBalanceEntity;
-import com.gzc.domain.trial.service.trail.IIndexGroupBuyMarketService;
+import com.gzc.domain.trial.service.trail.ITrailService;
 import com.gzc.types.enums.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +29,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class MarketTradeController {
 
-    private final IIndexGroupBuyMarketService indexGroupBuyMarketService;
-    private final ITradeLockOrderService tradeOrderService;
+    private final ITrailService trailService;
+    private final ITradeLockOrderService tradeLockOrderService;
 
 
     @GetMapping("/lock-order")
@@ -44,7 +44,7 @@ public class MarketTradeController {
 
 
         // 查询 outTradeNo 是否已经存在交易记录
-        LockedOrderEntity lockedOrderEntity = tradeOrderService.queryUnfinishedPayOrderByOutTradeNo(userId, outTradeNo);// todo
+        LockedOrderEntity lockedOrderEntity = tradeLockOrderService.queryUnfinishedPayOrderByOutTradeNo(userId, outTradeNo);// todo
         if (lockedOrderEntity != null) {
             log.info("用户有未完结的订单，交易单号为：{}", outTradeNo);
             LockMarketPayOrderResponseDTO lockMarketPayOrderResponseDTO = LockMarketPayOrderResponseDTO.builder()
@@ -63,7 +63,7 @@ public class MarketTradeController {
 
         // 判断拼团锁单是否完成了目标
         if (teamId != null) {
-            GroupBuyProgressVO groupBuyProgressVO = tradeOrderService.queryGroupBuyProgress(teamId);
+            GroupBuyProgressVO groupBuyProgressVO = tradeLockOrderService.queryGroupBuyProgress(teamId);
             if (groupBuyProgressVO != null && Objects.equals(groupBuyProgressVO.getTargetCount(), groupBuyProgressVO.getLockCount())) {
                 log.info("交易锁单拦截-拼单目标已达成:{} {}", userId, teamId);
                 return Response.<LockMarketPayOrderResponseDTO>builder()
@@ -75,18 +75,19 @@ public class MarketTradeController {
 
 
         // 营销优惠试算
-        TrailBalanceEntity trialBalanceEntity = indexGroupBuyMarketService.indexMarketTrial(TrailMarketProductEntity.builder()
+        TrailBalanceEntity trialBalanceEntity = trailService.indexMarketTrial(TrailMarketProductEntity.builder()
                 .userId(userId)
                 .goodsId(goodsId)
                 .build());
 
 
-        lockedOrderEntity = tradeOrderService.lockMarketPayOrder(userId,
+        lockedOrderEntity = tradeLockOrderService.lockMarketPayOrder(userId,
                 PayActivityEntity.builder()
                         .teamId(teamId)
                         .activityId(activityId)
-                        .startTime(trialBalanceEntity.getStartTime())
+                        .startTime(trialBalanceEntity.getStartTime())// todo
                         .endTime(trialBalanceEntity.getEndTime())
+                        .validTime(trialBalanceEntity.getValidTime())
                         .targetCount(trialBalanceEntity.getTarget())
                         .build(),
                 PayDiscountEntity.builder()
