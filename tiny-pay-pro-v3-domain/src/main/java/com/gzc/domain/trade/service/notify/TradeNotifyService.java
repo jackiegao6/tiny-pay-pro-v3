@@ -56,14 +56,15 @@ public class TradeNotifyService implements ITradeNotifyService{
             else if (NotifyTaskHTTPEnumVO.ERROR.getCode().equals(response)) {
                 // 回调任务出错
                 if (notifyTask.getNotifyCount() < 3) {
-                    // 回调任务出错次数最多是3次
-                    int updateCount = tradeRepository.updateNotifyTaskStatusError(notifyTask.getTeamId());
+                    // 回调任务最多重试3次
+                    int updateCount = tradeRepository.updateNotifyTaskStatusRetry(notifyTask.getTeamId());
                     if (1 == updateCount) {
                         errorCount += 1;
                     }
                 }
                 else {
-                    int updateCount = tradeRepository.updateNotifyTaskStatusRetry(notifyTask.getTeamId());
+                    // 回调任务第四次更新回调任务为失败
+                    int updateCount = tradeRepository.updateNotifyTaskStatusError(notifyTask.getTeamId());
                     if (1 == updateCount) {
                         retryCount += 1;
                     }
