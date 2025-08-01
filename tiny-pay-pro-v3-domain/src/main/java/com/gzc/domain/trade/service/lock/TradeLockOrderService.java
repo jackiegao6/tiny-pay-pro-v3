@@ -37,6 +37,6 @@ public class TradeLockOrderService implements ITradeLockOrderService {
     public LockedOrderEntity lockMarketPayOrder(String userId, PayActivityEntity payActivityEntity, PayDiscountEntity payDiscountEntity) {
 
         // 锁定聚合订单 - 这会用户只是下单还没有支付。后续会有2个流程；支付成功、超时未支付（回退）
-        return tradeRepository.lockMarketPayOrder(userId, payActivityEntity, payDiscountEntity);
+        return tradeRepository.lockOrderProcess(userId, payActivityEntity, payDiscountEntity);
     }
 }

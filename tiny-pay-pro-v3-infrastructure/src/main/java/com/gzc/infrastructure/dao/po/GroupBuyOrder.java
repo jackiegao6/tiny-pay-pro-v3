@@ -38,6 +38,8 @@ public class GroupBuyOrder {
     private Date validStartTime;
 
     private Date validEndTime;
+
+    private String notifyUrl;
     /** 创建时间 */
     private Date createTime;
     /** 更新时间 */

@@ -2,6 +2,7 @@ package com.gzc.infrastructure.adapter.repository;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson2.JSON;
 import com.gzc.domain.trade.adapter.repository.ITradeRepository;
 import com.gzc.domain.trade.model.entity.req.PayActivityEntity;
 import com.gzc.domain.trade.model.entity.req.PayDiscountEntity;
@@ -11,8 +12,10 @@ import com.gzc.domain.trade.model.valobj.GroupBuyProgressVO;
 import com.gzc.domain.trade.model.valobj.TradeOrderStatusEnumVO;
 import com.gzc.infrastructure.dao.IGroupBuyOrderDao;
 import com.gzc.infrastructure.dao.IGroupBuyOrderListDao;
+import com.gzc.infrastructure.dao.INotifyTaskDao;
 import com.gzc.infrastructure.dao.po.GroupBuyOrder;
 import com.gzc.infrastructure.dao.po.GroupBuyOrderList;
+import com.gzc.infrastructure.dao.po.NotifyTask;
 import com.gzc.types.enums.ResponseCode;
 import com.gzc.types.exception.AppException;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -35,6 +39,7 @@ public class TradeRepository implements ITradeRepository {
 
     private final IGroupBuyOrderListDao orderListDao;
     private final IGroupBuyOrderDao orderDao;
+    private final INotifyTaskDao notifyTaskDao;
 
     @Override
     public LockedOrderEntity queryUnfinishedPayOrderByOutTradeNo(String userId, String outTradeNo) {
@@ -70,7 +75,7 @@ public class TradeRepository implements ITradeRepository {
 
     @Transactional(timeout = 500)
     @Override
-    public LockedOrderEntity lockMarketPayOrder(String userId, PayActivityEntity payActivityEntity, PayDiscountEntity payDiscountEntity) {
+    public LockedOrderEntity lockOrderProcess(String userId, PayActivityEntity payActivityEntity, PayDiscountEntity payDiscountEntity) {
 
         String teamId = payActivityEntity.getTeamId();
         if (StringUtils.isBlank(teamId)){
@@ -94,6 +99,7 @@ public class TradeRepository implements ITradeRepository {
                     .lockCount(1)
                     .validStartTime(validStartTime)
                     .validEndTime(validEndTime)
+                    .notifyUrl(payActivityEntity.getNotifyUrl())
                     .build();
 
             // 写入记录
@@ -143,6 +149,7 @@ public class TradeRepository implements ITradeRepository {
                 .activityId(groupBuyOrderResp.getActivityId())
                 .status(TradeOrderStatusEnumVO.valueOf(groupBuyOrderResp.getStatus()))
                 .validEndTime(groupBuyOrderResp.getValidEndTime())
+                .notifyUrl(groupBuyOrderResp.getNotifyUrl())
                 .build();
     }
 
@@ -185,19 +192,27 @@ public class TradeRepository implements ITradeRepository {
             // 查询拼团交易完成外部单号列表
             List<String> outTradeNoList = orderListDao.queryCompletedOutTradeNoListByTeamId(teamId);
             log.info(String.valueOf(outTradeNoList));
+
+
             // 拼团完成写入回调任务记录
-//            NotifyTask notifyTask = new NotifyTask();
-//            notifyTask.setActivityId(groupBuyTeamEntity.getActivityId());
-//            notifyTask.setTeamId(groupBuyTeamEntity.getTeamId());
-//            notifyTask.setNotifyUrl("暂无");
-//            notifyTask.setNotifyCount(0);
-//            notifyTask.setNotifyStatus(0);
-//            notifyTask.setParameterJson(JSON.toJSONString(new HashMap<String, Object>() {{
-//                put("teamId", groupBuyTeamEntity.getTeamId());
-//                put("outTradeNoList", outTradeNoList);
-//            }}));
-//
-//            notifyTaskDao.insert(notifyTask);
+            Long activityId = groupBuyProgressVO.getActivityId();
+            String notifyUrl = groupBuyProgressVO.getNotifyUrl();
+
+            NotifyTask notifyTask = NotifyTask.builder()
+                    .activityId(activityId)
+                    .teamId(teamId)
+                    .notifyUrl(notifyUrl)
+                    .notifyCount(0)
+                    .notifyStatus(0)
+                    .parameterJson(
+                            JSON.toJSONString(new HashMap<String, Object>() {{
+                                put("teamId", teamId);
+                                put("outTradeNoList", outTradeNoList);
+                            }})
+                    )
+                    .build();
+
+            notifyTaskDao.insert(notifyTask);
         }
 
 

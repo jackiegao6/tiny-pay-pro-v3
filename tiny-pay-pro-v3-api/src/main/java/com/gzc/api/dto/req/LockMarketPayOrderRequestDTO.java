@@ -16,5 +16,6 @@ public class LockMarketPayOrderRequestDTO {
     Long activityId;
     String teamId;
     String outTradeNo;
+    String notifyUrl;
 
 }

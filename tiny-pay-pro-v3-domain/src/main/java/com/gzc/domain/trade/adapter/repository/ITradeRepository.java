@@ -15,7 +15,7 @@ public interface ITradeRepository {
 
     GroupBuyProgressVO queryGroupBuyProgress(String teamId);
 
-    LockedOrderEntity lockMarketPayOrder(String userId, PayActivityEntity payActivityEntity, PayDiscountEntity payDiscountEntity);
+    LockedOrderEntity lockOrderProcess(String userId, PayActivityEntity payActivityEntity, PayDiscountEntity payDiscountEntity);
 
     GroupBuyProgressVO querygroupBuyProgressVOByTeamId(String teamId);
 

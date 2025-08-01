@@ -41,6 +41,7 @@ public class MarketTradeController {
         Long activityId = lockMarketPayOrderRequestDTO.getActivityId();
         String teamId = lockMarketPayOrderRequestDTO.getTeamId();
         String outTradeNo = lockMarketPayOrderRequestDTO.getOutTradeNo();
+        String notifyUrl = lockMarketPayOrderRequestDTO.getNotifyUrl();
 
 
         // 查询 outTradeNo 是否已经存在交易记录
@@ -80,7 +81,7 @@ public class MarketTradeController {
                 .goodsId(goodsId)
                 .build());
 
-
+        // 锁单
         lockedOrderEntity = tradeLockOrderService.lockMarketPayOrder(userId,
                 PayActivityEntity.builder()
                         .teamId(teamId)
@@ -89,6 +90,7 @@ public class MarketTradeController {
                         .endTime(trialBalanceEntity.getEndTime())
                         .validTime(trialBalanceEntity.getValidTime())
                         .targetCount(trialBalanceEntity.getTarget())
+                        .notifyUrl(notifyUrl)
                         .build(),
                 PayDiscountEntity.builder()
                         .goodsId(goodsId)
