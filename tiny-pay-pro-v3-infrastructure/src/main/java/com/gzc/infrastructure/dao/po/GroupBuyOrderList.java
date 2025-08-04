@@ -52,4 +52,6 @@ public class GroupBuyOrderList {
     /** 更新时间 */
     private Date updateTime;
 
+    private Integer count;
+
 }

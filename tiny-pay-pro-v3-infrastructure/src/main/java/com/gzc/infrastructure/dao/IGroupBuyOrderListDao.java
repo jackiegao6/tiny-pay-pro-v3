@@ -38,4 +38,10 @@ public interface IGroupBuyOrderListDao {
      */
     List<String> queryCompletedOutTradeNoListByTeamId(String teamId);
 
+    List<GroupBuyOrderList> queryOwnerInProgressUserDetailList(GroupBuyOrderList groupBuyOrderListReq);
+
+    List<GroupBuyOrderList> queryRandomInProgressUserDetailList(GroupBuyOrderList groupBuyOrderListReq);
+
+    List<GroupBuyOrderList> queryTeamStatisticByActivityId(Long activityId);
+
 }

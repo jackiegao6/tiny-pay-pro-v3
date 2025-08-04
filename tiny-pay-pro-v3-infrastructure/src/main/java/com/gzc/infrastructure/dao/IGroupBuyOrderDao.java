@@ -3,6 +3,9 @@ package com.gzc.infrastructure.dao;
 import com.gzc.infrastructure.dao.po.GroupBuyOrder;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+import java.util.Set;
+
 @Mapper
 public interface IGroupBuyOrderDao {
 
@@ -35,5 +38,13 @@ public interface IGroupBuyOrderDao {
      * 返回此team下的 GroupBuyOrder
      */
     GroupBuyOrder queryGroupBuyProgressVOByTeamId(String teamId);
+
+    List<GroupBuyOrder> queryGroupBuyProgressByTeamIds(Set<String> teamIds);
+
+    Integer queryAllTeamCount(Set<String> teamIds);
+
+    Integer queryAllTeamCompleteCount(Set<String> teamIds);
+
+    Integer queryAllUserCount(Set<String> teamIds);
 
 }

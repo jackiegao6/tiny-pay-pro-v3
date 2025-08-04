@@ -36,4 +36,6 @@ public class TrailBalanceEntity {
     private Boolean isVisible;
     /** 是否可参与进团 */
     private Boolean isEnable;
+
+    private Long activityId;
 }

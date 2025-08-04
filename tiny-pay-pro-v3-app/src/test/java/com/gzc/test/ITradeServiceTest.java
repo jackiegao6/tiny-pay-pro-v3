@@ -31,7 +31,7 @@ public class ITradeServiceTest {
     @Test
     public void test_lockMarketPayOrder() throws Exception {
         LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO = new LockMarketPayOrderRequestDTO();
-        lockMarketPayOrderRequestDTO.setUserId("user02");
+        lockMarketPayOrderRequestDTO.setUserId("user022");
         lockMarketPayOrderRequestDTO.setTeamId(null);
         lockMarketPayOrderRequestDTO.setActivityId(100123L);
         lockMarketPayOrderRequestDTO.setGoodsId("9890001");
