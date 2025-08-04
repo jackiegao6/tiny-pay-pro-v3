@@ -189,31 +189,27 @@ public class TradeRepository implements ITradeRepository {
                 throw new AppException(ResponseCode.UPDATE_ORDER_STATUS_FAILED.getInfo());
             }
 
-            // 查询拼团交易完成外部单号列表
-            List<String> outTradeNoList = orderListDao.queryCompletedOutTradeNoListByTeamId(teamId);
-            log.info(String.valueOf(outTradeNoList));
-
-
-            // 拼团完成写入回调任务记录
-            Long activityId = groupBuyProgressVO.getActivityId();
-            String notifyUrl = groupBuyProgressVO.getNotifyUrl();
-
-            NotifyTask notifyTask = NotifyTask.builder()
-                    .activityId(activityId)
-                    .teamId(teamId)
-                    .notifyUrl(notifyUrl)
-                    .notifyCount(0)
-                    .notifyStatus(0)
-                    .parameterJson(
-                            JSON.toJSONString(new HashMap<String, Object>() {{
-                                put("teamId", teamId);
-                                put("outTradeNoList", outTradeNoList);
-                            }})
-                    )
-                    .build();
-
-            notifyTaskDao.insert(notifyTask);
         }
+        // 查询拼团交易完成外部单号列表
+        List<String> outTradeNoList = orderListDao.queryCompletedOutTradeNoListByTeamId(teamId);
+        // 支付完成写入回调任务记录
+        Long activityId = groupBuyProgressVO.getActivityId();
+        String notifyUrl = groupBuyProgressVO.getNotifyUrl();
+        NotifyTask notifyTask = NotifyTask.builder()
+                .activityId(activityId)
+                .teamId(teamId)
+                .notifyUrl(notifyUrl)
+                .notifyCount(0)
+                .notifyStatus(0)
+                .parameterJson(
+                        JSON.toJSONString(new HashMap<String, Object>() {{
+                            put("teamId", teamId);
+                            put("outTradeNoList", outTradeNoList);
+                        }})
+                )
+                .build();
+
+        notifyTaskDao.insert(notifyTask);
 
     }
 
@@ -243,5 +239,14 @@ public class TradeRepository implements ITradeRepository {
     @Override
     public int updateNotifyTaskStatusRetry(String teamId) {
         return notifyTaskDao.updateNotifyTaskStatusRetry(teamId);
+    }
+
+    @Override
+    public String queryTeamIdByUserIdAndOutTradeNo(String userId, String outTradeNo) {
+        GroupBuyOrderList groupBuyOrderListReq = GroupBuyOrderList.builder()
+                .userId(userId)
+                .outTradeNo(outTradeNo)
+                .build();
+        return orderListDao.queryTeamIdByUserIdAndOutTradeNo(groupBuyOrderListReq);
     }
 }

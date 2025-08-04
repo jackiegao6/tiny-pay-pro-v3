@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Getter
 public enum ResponseCode {
 
-    SUCCESS(0000, "成功"),
-    UN_ERROR(0001, "未知失败"),
-    ILLEGAL_PARAMETER(0002, "非法参数"),
+    SUCCESS(0, "成功"),
+    UN_ERROR(1, "未知失败"),
+    ILLEGAL_PARAMETER(2, "非法参数"),
 
     WRONG_TYPE(1001,"折扣计算服务类型错误"),
     UNKNOWN_ERROR(1002, "商品无拼团营销配置"),

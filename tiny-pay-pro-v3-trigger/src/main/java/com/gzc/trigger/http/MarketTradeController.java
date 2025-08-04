@@ -1,24 +1,28 @@
 package com.gzc.trigger.http;
 
 
+import com.alibaba.fastjson2.JSON;
 import com.gzc.api.dto.req.LockMarketPayOrderRequestDTO;
+import com.gzc.api.dto.req.SettlementRequestDTO;
 import com.gzc.api.dto.resp.LockMarketPayOrderResponseDTO;
+import com.gzc.api.dto.resp.SettlementResponseDTO;
 import com.gzc.api.response.Response;
 import com.gzc.domain.trade.model.entity.req.PayActivityEntity;
 import com.gzc.domain.trade.model.entity.req.PayDiscountEntity;
+import com.gzc.domain.trade.model.entity.req.TradePaySuccessEntity;
 import com.gzc.domain.trade.model.entity.resp.LockedOrderEntity;
+import com.gzc.domain.trade.model.entity.resp.TradePaySettlementEntity;
 import com.gzc.domain.trade.model.valobj.GroupBuyProgressVO;
 import com.gzc.domain.trade.service.lock.ITradeLockOrderService;
+import com.gzc.domain.trade.service.settlement.ITradeSettlementService;
 import com.gzc.domain.trial.model.entity.req.TrailMarketProductEntity;
 import com.gzc.domain.trial.model.entity.resp.TrailBalanceEntity;
 import com.gzc.domain.trial.service.trail.ITrailService;
 import com.gzc.types.enums.ResponseCode;
+import com.gzc.types.exception.AppException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
@@ -31,10 +35,11 @@ public class MarketTradeController {
 
     private final ITrailService trailService;
     private final ITradeLockOrderService tradeLockOrderService;
+    private final ITradeSettlementService tradeSettlementService;
 
 
-    @GetMapping("/lock-order")
-    public Response<LockMarketPayOrderResponseDTO> lockMarketPayOrder(LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO) throws Exception {
+    @PostMapping("/lock-order")
+    public Response<LockMarketPayOrderResponseDTO> lockMarketPayOrder(@RequestBody LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO) throws Exception {
 
         String userId = lockMarketPayOrderRequestDTO.getUserId();
         String goodsId = lockMarketPayOrderRequestDTO.getGoodsId();
@@ -113,6 +118,46 @@ public class MarketTradeController {
                         .build())
                 .build();
     }
+
+    @RequestMapping(value = "settlement_market_pay_order", method = RequestMethod.POST)
+    public Response<SettlementResponseDTO> settlementMarketPayOrder(@RequestBody SettlementRequestDTO requestDTO) {
+        try {
+
+            // 1. 结算服务
+            TradePaySettlementEntity tradePaySettlementEntity = tradeSettlementService.settlementMarketPayOrder(TradePaySuccessEntity.builder()
+                    .userId(requestDTO.getUserId())
+                    .outTradeNo(requestDTO.getOutTradeNo())
+                    .build());
+
+            SettlementResponseDTO responseDTO = SettlementResponseDTO.builder()
+                    .teamId(tradePaySettlementEntity.getTeamId())
+                    .build();
+
+            // 返回结果
+            Response<SettlementResponseDTO> response = Response.<SettlementResponseDTO>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .data(responseDTO)
+                    .build();
+
+            log.info("营销交易组队结算完成:{} outTradeNo:{} response:{}", requestDTO.getUserId(), requestDTO.getOutTradeNo(), JSON.toJSONString(response));
+
+            return response;
+        } catch (AppException e) {
+            log.error("营销交易组队结算异常:{} LockMarketPayOrderRequestDTO:{}", requestDTO.getUserId(), JSON.toJSONString(requestDTO), e);
+            return Response.<SettlementResponseDTO>builder()
+                    .code(e.getCode())
+                    .info(e.getInfo())
+                    .build();
+        } catch (Exception e) {
+            log.error("营销交易组队结算失败:{} LockMarketPayOrderRequestDTO:{}", requestDTO.getUserId(), JSON.toJSONString(requestDTO), e);
+            return Response.<SettlementResponseDTO>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
+    }
+
 
 
 }

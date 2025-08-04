@@ -32,4 +32,6 @@ public interface ITradeRepository {
 
     int updateNotifyTaskStatusRetry(String teamId);
 
+    String queryTeamIdByUserIdAndOutTradeNo(String userId, String outTradeNo);
+
 }

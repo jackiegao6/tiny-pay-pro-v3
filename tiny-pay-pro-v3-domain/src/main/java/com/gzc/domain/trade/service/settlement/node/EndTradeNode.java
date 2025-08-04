@@ -18,7 +18,7 @@ public class EndTradeNode extends AbstractNodeSupport {
     public TradePaySettlementEntity apply(TradePaySuccessEntity reqParam, DynamicContext context) throws Exception {
 
         return TradePaySettlementEntity.builder()
-
+                .teamId(reqParam.getTeamId())
                 .build();
     }
 

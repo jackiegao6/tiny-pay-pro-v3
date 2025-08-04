@@ -98,4 +98,10 @@
         group by team_id
     </select>
 
+    <select id="queryTeamIdByUserIdAndOutTradeNo" parameterType="com.gzc.infrastructure.dao.po.GroupBuyOrderList" resultType="java.lang.String">
+        select team_id
+        from group_buy_order_list
+        where user_id = #{userId} and out_trade_no = #{outTradeNo}
+    </select>
+
 </mapper>

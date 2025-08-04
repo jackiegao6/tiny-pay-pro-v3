@@ -1,5 +1,4 @@
-package com.gzc.domain.trade.model.entity.resp;
-
+package com.gzc.api.dto.resp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TradePaySettlementEntity {
-
+public class SettlementResponseDTO {
     private String teamId;
 }

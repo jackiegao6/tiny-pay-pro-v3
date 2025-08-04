@@ -1,8 +1,5 @@
 package com.gzc.domain.trade.service.settlement.node;
 
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
-import com.alibaba.fastjson2.util.DateUtils;
 import com.gzc.domain.trade.model.entity.req.TradePaySuccessEntity;
 import com.gzc.domain.trade.model.entity.resp.TradePaySettlementEntity;
 import com.gzc.domain.trade.model.valobj.GroupBuyProgressVO;
@@ -29,7 +26,11 @@ public class FilterTradeNode extends AbstractNodeSupport {
     public TradePaySettlementEntity apply(TradePaySuccessEntity reqParam, DynamicContext context) throws Exception {
 
         // 1.查询组团进度信息
-        String teamId = reqParam.getTeamId();
+        String userId = reqParam.getUserId();
+        String outTradeNo = reqParam.getOutTradeNo();
+        String teamId = tradeRepository.queryTeamIdByUserIdAndOutTradeNo(userId, outTradeNo);
+        reqParam.setTeamId(teamId);
+
         GroupBuyProgressVO groupBuyProgressVO = tradeRepository.querygroupBuyProgressVOByTeamId(teamId);
 
         // 外部交易时间 - 也就是用户支付完成的时间，这个时间要在拼团有效时间范围内

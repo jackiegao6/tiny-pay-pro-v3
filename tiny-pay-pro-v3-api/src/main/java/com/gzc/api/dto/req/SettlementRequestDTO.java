@@ -1,5 +1,4 @@
-package com.gzc.domain.trade.model.entity.req;
-
+package com.gzc.api.dto.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,10 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TradePaySuccessEntity {
-
-
+public class SettlementRequestDTO {
     private String userId;
-    private String teamId;// dto 并没有传过来
     private String outTradeNo;
 }

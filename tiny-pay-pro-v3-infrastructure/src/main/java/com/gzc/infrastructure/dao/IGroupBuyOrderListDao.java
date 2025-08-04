@@ -44,4 +44,6 @@ public interface IGroupBuyOrderListDao {
 
     List<GroupBuyOrderList> queryTeamStatisticByActivityId(Long activityId);
 
+    String queryTeamIdByUserIdAndOutTradeNo(GroupBuyOrderList groupBuyOrderListReq);
+
 }
