@@ -87,7 +87,7 @@ public class MarketIndexShowController implements IMarketIndexShowService {
                             .teamStatisticInfo(teamStatisticInfo)
                             .build())
                     .build();
-            log.info("查询拼团营销配置完成");
+            log.info("拼团首页数据加载 完成");
 
             return response;
         } catch (Exception e) {

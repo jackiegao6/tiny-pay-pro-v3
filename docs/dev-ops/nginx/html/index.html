@@ -12,8 +12,8 @@
 <div class="swiper-container">
     <div class="swiper-wrapper">
         <div class="swiper-slide"><img src="./images/sku-13811216-01.png"></div>
-<!--        <div class="swiper-slide"><img src="./images/sku-13811216-02.png"></div>-->
-<!--        <div class="swiper-slide"><img src="./images/sku-13811216-03.png"></div>-->
+        <!--        <div class="swiper-slide"><img src="./images/sku-13811216-02.png"></div>-->
+        <!--        <div class="swiper-slide"><img src="./images/sku-13811216-03.png"></div>-->
     </div>
     <div class="swiper-pagination"></div>
 </div>
@@ -45,7 +45,7 @@
         <h2>请扫码支付</h2>
         <br/>
         <p id="paymentAmount" style="color:red;"></p>
-<!--        <img src="./images/sku-13811216-04.png" alt="支付二维码" class="qr-code">-->
+        <!--        <img src="./images/sku-13811216-04.png" alt="支付二维码" class="qr-code">-->
         <p id="outTradeNo"></p>
         <div class="button-group">
             <button id="cancelPayment">取消支付</button>
@@ -56,7 +56,7 @@
 <script src="js/index.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // 根据测试诉求，设置基础地址
         var baseUrl = "http://127.0.0.1:8091";
 
@@ -83,14 +83,14 @@
         })
             .then(response => response.json())
             .then(res => {
-                if(res.code !== 0) return;
+                if (res.code !== 0) return;
 
-                const { goodsInfo, teamInfos, teamStatisticInfo } = res.data;
+                const {goodsInfo, teamInfos, teamStatisticInfo} = res.data;
                 const groupList = document.querySelector('.group-list');
                 const promotionText = document.querySelector('.promotion-text');
 
                 // 更新促销信息
-                promotionText.textContent = `直降 ¥${goodsInfo.deductionPrice.toFixed(0)}，${teamStatisticInfo.allTeamUserCount}人再抢，参与马上抢到`;
+                promotionText.textContent = `直降 ¥${goodsInfo.deductionPrice.toFixed(0)}，${teamStatisticInfo.allTeamUserCount}人在抢，速速参与`;
 
                 // 清空并生成拼团列表
                 groupList.innerHTML = '';
@@ -107,7 +107,7 @@
                     teamInfos.forEach(team => {
                         const remaining = team.targetCount - team.lockCount;
                         // 判断当前用户ID是否为登录用户ID
-                        if(userId == team.userId){
+                        if (userId == team.userId) {
                             outTradeNo = team.outTradeNo;
                         }
 
@@ -138,10 +138,10 @@
 
                 // 绑定支付事件[拼团购买]
                 document.querySelectorAll('.group-btn, .group-buy').forEach(btn => {
-                    btn.addEventListener('click', function() {
+                    btn.addEventListener('click', function () {
 
                         // 如果有值，则直接展示支付按钮
-                        if(outTradeNo) {
+                        if (outTradeNo) {
                             // 显示支付弹窗
                             document.getElementById('paymentAmount').textContent =
                                 `￥${this.dataset.price}`;
@@ -184,7 +184,7 @@
                                 if (res.code !== 0) {
                                     // 失败，清空交易ID
                                     outTradeNo = null;
-                                    alert(res.code + "：" +res.info);
+                                    alert(res.code + "：" + res.info);
                                     return;
                                 }
 
@@ -216,7 +216,6 @@
 
         // 获取所有的按钮
         const buttons = document.querySelectorAll(".buy-alone")
-
         // 为每个按钮添加点击事件
         buttons.forEach((button) => {
             button.addEventListener("click", function () {

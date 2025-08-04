@@ -19,7 +19,6 @@ public class SwitchNode extends AbstractNodeSupport {
 
     @Override
     protected TrailBalanceEntity doApply(TrailMarketProductEntity requestParameter, DynamicContext dynamicContext) throws Exception {
-        log.info("SwitchNode...");
 
         return router(requestParameter, dynamicContext);
     }

@@ -30,15 +30,17 @@ public class ITradeServiceTest {
 
     @Test
     public void test_lockMarketPayOrder() throws Exception {
-        LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO = new LockMarketPayOrderRequestDTO();
-        lockMarketPayOrderRequestDTO.setUserId("user022");
-        lockMarketPayOrderRequestDTO.setTeamId(null);
-        lockMarketPayOrderRequestDTO.setActivityId(100123L);
-        lockMarketPayOrderRequestDTO.setGoodsId("9890001");
-        lockMarketPayOrderRequestDTO.setOutTradeNo(RandomStringUtils.randomNumeric(12));
-        lockMarketPayOrderRequestDTO.setNotifyUrl("http://127.0.0.1:8091/api/v1/test/group_buy_notify");
-        Response<LockMarketPayOrderResponseDTO> lockMarketPayOrderResponseDTOResponse = marketTradeController.lockMarketPayOrder(lockMarketPayOrderRequestDTO);
-        log.info("测试结果 req:{} \nres:{}", JSON.toJSONString(lockMarketPayOrderRequestDTO), JSON.toJSONString(lockMarketPayOrderResponseDTOResponse));
+        for (int i = 0; i < 9; i++) {
+            LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO = new LockMarketPayOrderRequestDTO();
+            lockMarketPayOrderRequestDTO.setUserId("user0"+i);
+            lockMarketPayOrderRequestDTO.setTeamId(null);
+            lockMarketPayOrderRequestDTO.setActivityId(100123L);
+            lockMarketPayOrderRequestDTO.setGoodsId("9890001");
+            lockMarketPayOrderRequestDTO.setOutTradeNo(RandomStringUtils.randomNumeric(12));
+            lockMarketPayOrderRequestDTO.setNotifyUrl("http://127.0.0.1:8091/api/v1/test/group_buy_notify");
+            Response<LockMarketPayOrderResponseDTO> lockMarketPayOrderResponseDTOResponse = marketTradeController.lockMarketPayOrder(lockMarketPayOrderRequestDTO);
+            log.info("测试结果 req:{} \nres:{}", JSON.toJSONString(lockMarketPayOrderRequestDTO), JSON.toJSONString(lockMarketPayOrderResponseDTOResponse));
+        }
     }
 
 
