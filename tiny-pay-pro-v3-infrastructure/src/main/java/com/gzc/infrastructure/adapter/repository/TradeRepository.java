@@ -191,26 +191,28 @@ public class TradeRepository implements ITradeRepository {
 
         }
 
-//        // 查询拼团交易完成外部单号列表
+        // 查询拼团交易完成外部单号列表
 //        List<String> outTradeNoList = orderListDao.queryCompletedOutTradeNoListByTeamId(teamId);
-//        // 支付完成写入回调任务记录
-//        Long activityId = groupBuyProgressVO.getActivityId();
-//        String notifyUrl = groupBuyProgressVO.getNotifyUrl();
-//        NotifyTask notifyTask = NotifyTask.builder()
-//                .activityId(activityId)
-//                .teamId(teamId)
-//                .notifyUrl(notifyUrl)
-//                .notifyCount(0)
-//                .notifyStatus(0)
-//                .parameterJson(
-//                        JSON.toJSONString(new HashMap<String, Object>() {{
-//                            put("teamId", teamId);
-//                            put("outTradeNoList", outTradeNoList);
-//                        }})
-//                )
-//                .build();
-//
-//        notifyTaskDao.insert(notifyTask);
+
+        // 支付完成写入回调任务记录
+        Long activityId = groupBuyProgressVO.getActivityId();
+        String notifyUrl = groupBuyProgressVO.getNotifyUrl();
+        NotifyTask notifyTask = NotifyTask.builder()
+                .activityId(activityId)
+                .teamId(teamId)
+                .notifyUrl(notifyUrl)
+                .notifyCount(0)
+                .notifyStatus(0)
+                .parameterJson(
+                        JSON.toJSONString(new HashMap<String, Object>() {{
+                            put("teamId", teamId);
+                            put("userId", userId);
+                            put("outTradeNo", outTradeNo);
+                        }})
+                )
+                .build();
+
+        notifyTaskDao.insert(notifyTask);
 
     }
 

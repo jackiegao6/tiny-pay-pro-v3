@@ -32,7 +32,7 @@ public class TradeNotifyService implements ITradeNotifyService{
 
     @Override
     public Map<String, Integer> execSettlementNotifyJob(String teamId) throws Exception {
-        log.info("拼团交易-执行结算通知，指定 teamId:{}", teamId);
+        log.info("回调通知，指定 teamId:{}", teamId);
 
         List<NotifyTaskVO> notifyTaskEntityList = tradeRepository.queryUnExecutedNotifyTaskList(teamId);
         return execSettlementNotifyJob(notifyTaskEntityList);
@@ -59,14 +59,14 @@ public class TradeNotifyService implements ITradeNotifyService{
                     // 回调任务最多重试3次
                     int updateCount = tradeRepository.updateNotifyTaskStatusRetry(notifyTask.getTeamId());
                     if (1 == updateCount) {
-                        errorCount += 1;
+                        retryCount += 1;
                     }
                 }
                 else {
                     // 回调任务第四次更新回调任务为失败
                     int updateCount = tradeRepository.updateNotifyTaskStatusError(notifyTask.getTeamId());
                     if (1 == updateCount) {
-                        retryCount += 1;
+                        errorCount += 1;
                     }
                 }
             }
@@ -75,8 +75,8 @@ public class TradeNotifyService implements ITradeNotifyService{
         Map<String, Integer> resultMap = new HashMap<>();
         resultMap.put("waitCount", notifyTaskEntityList.size());
         resultMap.put("successCount", successCount);
-        resultMap.put("errorCount", errorCount);
         resultMap.put("retryCount", retryCount);
+        resultMap.put("errorCount", errorCount);
 
         return resultMap;
     }
