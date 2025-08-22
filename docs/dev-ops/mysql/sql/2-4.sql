@@ -4,9 +4,9 @@ DROP TABLE IF EXISTS `crowd_tags`;
 CREATE TABLE `crowd_tags` (
                               `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
                               `tag_id` varchar(32) NOT NULL COMMENT '人群ID',
-                              `tag_name` varchar(64) NOT NULL COMMENT '人群名称',
-                              `tag_desc` varchar(256) NOT NULL COMMENT '人群描述',
-                              `statistics` int(8) NOT NULL COMMENT '人群标签统计量',
+                              `tag_name` varchar(64) DEFAULT NULL COMMENT '人群名称',
+                              `tag_desc` varchar(256) DEFAULT NULL COMMENT '人群描述',
+                              `statistics` int(8) DEFAULT 0 COMMENT '人群标签统计量',
                               `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                               `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                               PRIMARY KEY (`id`),

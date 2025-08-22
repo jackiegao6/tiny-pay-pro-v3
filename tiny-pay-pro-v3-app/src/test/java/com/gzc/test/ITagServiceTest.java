@@ -25,17 +25,18 @@ public class ITagServiceTest {
     private IRedisService redisService;
 
 
+    // 测试之前应该由运营将所有有关的用户 涌入到对应的人群标签里
     @Test
     public void test_tag_job() {
-        tagService.execTagBatchJob("RQ_KJHKL98UU78H66554GFDV", "10001");
+        tagService.execTagBatchJob("test_tag", "10002");
     }
 
     @Test
     public void test_get_tag_bitmap() {
-        RBitSet bitSet = redisService.getBitSet("RQ_KJHKL98UU78H66554GFDV");
+        RBitSet bitSet = redisService.getBitSet("test_tag");
         // 是否存在
-        log.info("xiaofuge 存在，预期结果为 true，测试结果:{}", bitSet.get(redisService.getIndexFromUserId("gzc")));
-        log.info("xiaofuge 存在，预期结果为 true，测试结果:{}", bitSet.get(redisService.getIndexFromUserId("gzcgzc")));
-        log.info("gudebai 不存在，预期结果为 false，测试结果:{}", bitSet.get(redisService.getIndexFromUserId("gzcc")));
+        log.info("gao_tag 存在，预期结果为 true，测试结果:{}", bitSet.get(redisService.getIndexFromUserId("gao_tag")));
+        log.info("gaogao_tag 存在，预期结果为 true，测试结果:{}", bitSet.get(redisService.getIndexFromUserId("gaogao_tag")));
+        log.info("gzcc 不存在，预期结果为 false，测试结果:{}", bitSet.get(redisService.getIndexFromUserId("gzcc")));
     }
 }

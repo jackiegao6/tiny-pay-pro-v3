@@ -39,7 +39,9 @@ public class TagRepository implements ITagRepository {
                 .tagId(tagId)
                 .batchId(batchId)
                 .build();
+
         CrowdTagsJob crowdTagsJobRes = crowdTagsJobDao.queryCrowdTagsJob(crowdTagsJobReq);
+        if (crowdTagsJobRes == null) return null;
         return CrowdTagsJobEntity.builder()
                 .tagType(crowdTagsJobRes.getTagType())
                 .tagRule(crowdTagsJobRes.getTagRule())
@@ -63,13 +65,12 @@ public class TagRepository implements ITagRepository {
             crowdTagsDetailDao.addCrowdTagsUserId(crowdTagsDetailReq);
 
             // 获取BitSet
-            RBitSet bitSet = redisService.getBitSet(tagId);
-            bitSet.set(redisService.getIndexFromUserId(userId), true);
+            RBitSet tagBitSet = redisService.getBitSet(tagId);
+            tagBitSet.set(redisService.getIndexFromUserId(userId), true);
         } catch (DuplicateKeyException ignore) {
             // 忽略唯一索引冲突
             log.error("唯一索引冲突");
         }
-
     }
 
 
