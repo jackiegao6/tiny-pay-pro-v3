@@ -48,8 +48,10 @@ public class TradeRepository implements ITradeRepository {
                 .userId(userId)
                 .outTradeNo(outTradeNo)
                 .build();
+
         GroupBuyOrderList groupBuyOrderListResp = orderListDao.queryGroupBuyOrderRecordByOutTradeNo(groupBuyOrderListReq);
         if (groupBuyOrderListResp == null) return null;
+
         log.info("存在未完成的营销订单");
         return LockedOrderEntity.builder()
                 .orderId(groupBuyOrderListResp.getOrderId())
@@ -105,9 +107,7 @@ public class TradeRepository implements ITradeRepository {
             // 写入记录
             orderDao.insert(groupBuyOrder);
         }else{
-            // 更新记录 - 如果更新记录不等于1，则表示拼团已满，抛出异常 todo 感觉不需要 因为 在controller层里面拦截过了
-            int updateCompletedNum  = orderDao.updateAddLockCount(teamId);
-            if (updateCompletedNum != 1) throw new AppException(ResponseCode.FULL_TEAM.getInfo());
+            orderDao.updateAddLockCount(teamId);
         }
 
         String orderId = RandomStringUtils.randomNumeric(12);
@@ -159,7 +159,7 @@ public class TradeRepository implements ITradeRepository {
 
         String userId = tradePaySuccessEntity.getUserId();
         String outTradeNo = tradePaySuccessEntity.getOutTradeNo();
-        String teamId = tradePaySuccessEntity.getTeamId();
+        String teamId = groupBuyProgressVO.getTeamId();
 
         // 1. 更新未支付订单状态为已支付
         GroupBuyOrderList groupBuyOrderListReq = new GroupBuyOrderList();
@@ -190,26 +190,27 @@ public class TradeRepository implements ITradeRepository {
             }
 
         }
-        // 查询拼团交易完成外部单号列表
-        List<String> outTradeNoList = orderListDao.queryCompletedOutTradeNoListByTeamId(teamId);
-        // 支付完成写入回调任务记录
-        Long activityId = groupBuyProgressVO.getActivityId();
-        String notifyUrl = groupBuyProgressVO.getNotifyUrl();
-        NotifyTask notifyTask = NotifyTask.builder()
-                .activityId(activityId)
-                .teamId(teamId)
-                .notifyUrl(notifyUrl)
-                .notifyCount(0)
-                .notifyStatus(0)
-                .parameterJson(
-                        JSON.toJSONString(new HashMap<String, Object>() {{
-                            put("teamId", teamId);
-                            put("outTradeNoList", outTradeNoList);
-                        }})
-                )
-                .build();
 
-        notifyTaskDao.insert(notifyTask);
+//        // 查询拼团交易完成外部单号列表
+//        List<String> outTradeNoList = orderListDao.queryCompletedOutTradeNoListByTeamId(teamId);
+//        // 支付完成写入回调任务记录
+//        Long activityId = groupBuyProgressVO.getActivityId();
+//        String notifyUrl = groupBuyProgressVO.getNotifyUrl();
+//        NotifyTask notifyTask = NotifyTask.builder()
+//                .activityId(activityId)
+//                .teamId(teamId)
+//                .notifyUrl(notifyUrl)
+//                .notifyCount(0)
+//                .notifyStatus(0)
+//                .parameterJson(
+//                        JSON.toJSONString(new HashMap<String, Object>() {{
+//                            put("teamId", teamId);
+//                            put("outTradeNoList", outTradeNoList);
+//                        }})
+//                )
+//                .build();
+//
+//        notifyTaskDao.insert(notifyTask);
 
     }
 

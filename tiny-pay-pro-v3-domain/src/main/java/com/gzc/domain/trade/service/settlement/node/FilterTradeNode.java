@@ -29,7 +29,6 @@ public class FilterTradeNode extends AbstractNodeSupport {
         String userId = reqParam.getUserId();
         String outTradeNo = reqParam.getOutTradeNo();
         String teamId = tradeRepository.queryTeamIdByUserIdAndOutTradeNo(userId, outTradeNo);
-        reqParam.setTeamId(teamId);
 
         GroupBuyProgressVO groupBuyProgressVO = tradeRepository.querygroupBuyProgressVOByTeamId(teamId);
 
@@ -43,6 +42,8 @@ public class FilterTradeNode extends AbstractNodeSupport {
             log.error("订单交易时间不在拼团有效时间范围内");
             throw new AppException(ResponseCode.WRONG_TIME_FOR_OUT_TRADE.getInfo());
         }
+
+        context.setTeamId(teamId);
         context.setGroupBuyProgressVO(groupBuyProgressVO);
         context.setOutTradeTime(outTradeTime);
         return router(reqParam, context);

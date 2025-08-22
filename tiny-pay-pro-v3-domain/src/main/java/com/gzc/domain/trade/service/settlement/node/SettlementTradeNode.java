@@ -28,15 +28,15 @@ public class SettlementTradeNode extends AbstractNodeSupport {
     public TradePaySettlementEntity apply(TradePaySuccessEntity reqParam, DynamicContext context) throws Exception {
 
         GroupBuyProgressVO groupBuyProgressVO = context.getGroupBuyProgressVO();
-        // 2.拼团交易结算
-        Date outTradeTime = context.getOutTradeTime();
-        groupBuyProgressVO.setOutTradeTime(outTradeTime);
+        groupBuyProgressVO.setOutTradeTime(context.getOutTradeTime());
+        groupBuyProgressVO.setTeamId(context.getTeamId());
+
+
         tradeRepository.settlementProcess(reqParam, groupBuyProgressVO);
 
         // 5. 组队回调处理 - 处理失败也会有定时任务补偿，通过这样的方式，可以减轻任务调度，提高时效性
-        String teamId = reqParam.getTeamId();
-        Map<String, Integer> notifyResultMap = tradeNotifyService.execSettlementNotifyJob(teamId);
-        log.info("回调通知拼团完结 result:{}", JSON.toJSONString(notifyResultMap));
+//        Map<String, Integer> notifyResultMap = tradeNotifyService.execSettlementNotifyJob(teamId);
+//        log.info("回调通知拼团完结 result:{}", JSON.toJSONString(notifyResultMap));
 
         return router(reqParam, context);
     }

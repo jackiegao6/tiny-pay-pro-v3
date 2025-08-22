@@ -13,6 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class DynamicContext {
 
+    private String teamId;
     private GroupBuyProgressVO groupBuyProgressVO;
     private Date outTradeTime;
 

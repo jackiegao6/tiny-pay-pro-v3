@@ -20,7 +20,6 @@ public class TradeLockOrderService implements ITradeLockOrderService {
     @Override
     public LockedOrderEntity queryUnfinishedPayOrderByOutTradeNo(String userId, String outTradeNo) {
 
-        log.info("拼团交易-查询未完成营销订单:{} outTradeNo:{}", userId, outTradeNo);
         return tradeRepository.queryUnfinishedPayOrderByOutTradeNo(userId, outTradeNo);
     }
 
@@ -28,7 +27,6 @@ public class TradeLockOrderService implements ITradeLockOrderService {
     @Override
     public GroupBuyProgressVO queryGroupBuyProgress(String teamId) {
 
-        log.info("拼团交易-查询拼单进度:{}", teamId);
         return tradeRepository.queryGroupBuyProgress(teamId);
     }
 

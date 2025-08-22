@@ -14,13 +14,13 @@ public interface ITradeLockOrderService {
 
 
     /**
+     * 锁定营销优惠支付订单
+     */
+    LockedOrderEntity lockMarketPayOrder(String userId, PayActivityEntity payActivityEntity, PayDiscountEntity payDiscountEntity);
+
+    /**
      * 根据组队id 查询 拼团进度
      */
     GroupBuyProgressVO queryGroupBuyProgress(String teamId);
 
-
-    /**
-     * 锁定营销优惠支付订单
-     */
-    LockedOrderEntity lockMarketPayOrder(String userId, PayActivityEntity payActivityEntity, PayDiscountEntity payDiscountEntity);
 }

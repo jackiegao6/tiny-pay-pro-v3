@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class TradePaySuccessEntity {
 
-
     private String userId;
-    private String teamId;// dto 并没有传过来
     private String outTradeNo;
 }
