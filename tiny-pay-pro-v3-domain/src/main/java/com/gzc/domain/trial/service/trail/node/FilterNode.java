@@ -40,6 +40,9 @@ public class FilterNode extends AbstractNodeSupport {
             activityDiscountVO = activityDiscountVOFutureTask.get(timeout, TimeUnit.SECONDS);
         } catch (Exception ignored) {
         }
+        if (activityDiscountVO == null){
+            throw new AppException(ResponseCode.UNKNOWN_ERROR.getCode(), ResponseCode.UNKNOWN_ERROR.getInfo());
+        }
         context.setActivityDiscountVO(activityDiscountVO);
     }
 
@@ -51,7 +54,7 @@ public class FilterNode extends AbstractNodeSupport {
         // 校验；活动状态 - 可以抛业务异常code，或者把code写入到动态上下文dynamicContext中，最后获取。
         if (!ActivityStatusEnumVO.EFFECTIVE.getCode().equals(status)){
             log.info("活动的可用性校验，活动未生效");
-            throw new AppException(ResponseCode.NO_EFFECTIVE.getInfo());
+            throw new AppException(ResponseCode.NO_EFFECTIVE.getCode(), ResponseCode.NO_EFFECTIVE.getInfo());
         }
 
         // 校验；活动时间
@@ -61,7 +64,7 @@ public class FilterNode extends AbstractNodeSupport {
         Long activityId = activityDiscountVO.getActivityId();
         if (currentTime.before(startTime) || currentTime.after(endTime)) {
             log.info("活动的可用性校验，非可参与时间范围 activityId:{}", activityId);
-            throw new AppException(ResponseCode.NOT_IN_VALID_DATE.getInfo());
+            throw new AppException(ResponseCode.NOT_IN_VALID_DATE.getCode(), ResponseCode.NOT_IN_VALID_DATE.getInfo());
         }
 
         // 校验；用户参与次数限制

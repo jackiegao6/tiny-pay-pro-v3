@@ -6,12 +6,12 @@ import com.gzc.domain.trial.model.valobj.SkuVO;
 
 public interface ITrailRepository {
 
-    SkuVO querySkuVOByGoodsId(String goodsId);
-
     ActivityDiscountVO queryActivityAndDiscountVOByGoodsId(String goodsId);
 
     boolean queryInTagScopeByUserId(String tagId, String userId);
 
     Integer queryOrderCountByActivityId(Long activityId, String userId);
+
+    SkuVO querySkuVOByGoodsId(String goodsId);
 
 }

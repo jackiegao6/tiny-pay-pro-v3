@@ -28,24 +28,7 @@ public class TrailNode extends AbstractNodeSupport {
 
     private final EndNode endNode;
     private final ErrorNode errorNode;
-    private final ThreadPoolExecutor threadPoolExecutor;
     private final Map<String, IDiscountCalculateService> discountCalculateServiceMap;
-
-
-    @Override
-    protected void multiThread(TrailMarketProductEntity reqParam, DynamicContext context) throws ExecutionException, InterruptedException, TimeoutException {
-        String goodsId = reqParam.getGoodsId();
-
-        FutureTask<SkuVO> skuVOFutureTask = new FutureTask<>(new QuerySkuVOFromDBThreadTask(goodsId, trailRepository));
-        threadPoolExecutor.execute(skuVOFutureTask);
-
-        SkuVO skuVO = null;
-        try {
-            skuVO = skuVOFutureTask.get(timeout, TimeUnit.SECONDS);
-        } catch (Exception ignored) {
-        }
-        context.setSkuVO(skuVO);
-    }
 
     @Override
     protected TrailBalanceEntity doApply(TrailMarketProductEntity reqParam, DynamicContext context) throws Exception {
@@ -76,7 +59,6 @@ public class TrailNode extends AbstractNodeSupport {
         context.setDeductionPrice(originalPrice.subtract(currentPrice));
 
 
-        log.info("拼团优惠试算 完成");
         return router(reqParam, context);
     }
 

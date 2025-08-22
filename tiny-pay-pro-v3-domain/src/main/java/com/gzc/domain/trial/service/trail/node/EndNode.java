@@ -21,15 +21,16 @@ public class EndNode extends AbstractNodeSupport {
     protected TrailBalanceEntity doApply(TrailMarketProductEntity requestParameter, DynamicContext dynamicContext) throws Exception {
         SkuVO skuVO = dynamicContext.getSkuVO();
         ActivityDiscountVO activityDiscountVO = dynamicContext.getActivityDiscountVO();
+        BigDecimal originalPrice = skuVO.getOriginalPrice();
         BigDecimal currentPrice = dynamicContext.getCurrentPrice();
         BigDecimal deductionPrice = dynamicContext.getDeductionPrice();
 
         return TrailBalanceEntity.builder()
-                .goodsId(skuVO != null ? skuVO.getGoodsId() : null)
-                .goodsName(skuVO != null ? skuVO.getGoodsName() : null)
-                .originalPrice(skuVO != null ? skuVO.getOriginalPrice() : null)
-                .deductionPrice(deductionPrice)
-                .currentPrice(currentPrice)
+                .goodsId(requestParameter.getGoodsId())
+                .goodsName(skuVO.getGoodsName())
+                .originalPrice(originalPrice)
+                .deductionPrice(deductionPrice == null ? new BigDecimal("0") : deductionPrice)
+                .currentPrice(currentPrice == null ? originalPrice : currentPrice)
                 .target(activityDiscountVO.getTarget())
                 .startTime(activityDiscountVO.getStartTime())
                 .endTime(activityDiscountVO.getEndTime())

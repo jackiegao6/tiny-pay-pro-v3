@@ -25,6 +25,22 @@ public class TagNode extends AbstractNodeSupport {
 
     private final TrailNode trailNode;
     private final EndNode endNode;
+    private final ThreadPoolExecutor threadPoolExecutor;
+
+    @Override
+    protected void multiThread(TrailMarketProductEntity reqParam, DynamicContext context) throws ExecutionException, InterruptedException, TimeoutException {
+        String goodsId = reqParam.getGoodsId();
+
+        FutureTask<SkuVO> skuVOFutureTask = new FutureTask<>(new QuerySkuVOFromDBThreadTask(goodsId, trailRepository));
+        threadPoolExecutor.execute(skuVOFutureTask);
+
+        SkuVO skuVO = null;
+        try {
+            skuVO = skuVOFutureTask.get(timeout, TimeUnit.SECONDS);
+        } catch (Exception ignored) {
+        }
+        context.setSkuVO(skuVO);
+    }
 
     @Override
     protected TrailBalanceEntity doApply(TrailMarketProductEntity requestParameter, DynamicContext context) throws Exception {
@@ -40,16 +56,21 @@ public class TagNode extends AbstractNodeSupport {
         }
 
         // 活动配置了人群标签
-        boolean[] tagRestrictFlag = activityDiscountVO.getTagRestrictFlag();
+        boolean[] tagRestrictFlag = activityDiscountVO.getTagRestrictFlag(); // [true, false]
 
         boolean isInTagScope = trailRepository.queryInTagScopeByUserId(tagId, userId);
         if(isInTagScope){
             context.setVisible(!tagRestrictFlag[0]);
-            context.setJoin(!tagRestrictFlag[1]);
+            if (context.isVisible()){
+                context.setJoin(!tagRestrictFlag[1]);
+            }
             log.info("当前用户属于人群标签，可见性：{}，参与性{}", context.isVisible(), context.isJoin());
             return router(requestParameter, context);
 
         }
+        // todo 测试环节 实际上应该为 如果一个用户不属于人群标签 那么他的可见性和参与性都为false
+//        context.setVisible(false);
+//        context.setJoin(false);
         context.setVisible(true);
         context.setJoin(true);
 
@@ -58,9 +79,10 @@ public class TagNode extends AbstractNodeSupport {
 
     @Override
     public NodeHandler<TrailMarketProductEntity, DynamicContext, TrailBalanceEntity> get(TrailMarketProductEntity reqParam, DynamicContext context) throws Exception {
-        if (!context.isVisible()){
-            return endNode;
+        if (context.isVisible()){
+            // todo 到时候真下单的时候 在判断 该用户能否参与
+            return trailNode;
         }
-        return trailNode;
+        return endNode;
     }
 }

@@ -36,7 +36,7 @@ public class ITrailServiceTest {
     public void test_wrong_product_indexMarketTrial() throws Exception {
 
         TrailMarketProductEntity trailMarketProductEntity = new TrailMarketProductEntity();
-        trailMarketProductEntity.setUserId("gzc");
+        trailMarketProductEntity.setUserId("gzc_normal");
         trailMarketProductEntity.setGoodsId("9890000");
 
         TrailBalanceEntity trailBalanceEntity = iTrailService.indexMarketTrial(trailMarketProductEntity);
@@ -48,7 +48,7 @@ public class ITrailServiceTest {
     public void test_in_tag_indexMarketTrial() throws Exception {
 
         TrailMarketProductEntity trailMarketProductEntity = new TrailMarketProductEntity();
-        trailMarketProductEntity.setUserId("gzc");
+        trailMarketProductEntity.setUserId("xiaofuge");
         trailMarketProductEntity.setGoodsId("9890001");
 
         TrailBalanceEntity trailBalanceEntity = iTrailService.indexMarketTrial(trailMarketProductEntity);
