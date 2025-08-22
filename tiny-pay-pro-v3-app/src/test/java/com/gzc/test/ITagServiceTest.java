@@ -33,7 +33,7 @@ public class ITagServiceTest {
 
     @Test
     public void test_get_tag_bitmap() {
-        RBitSet bitSet = redisService.getBitSet("test_tag");
+        RBitSet bitSet = redisService.getBitSet("tag_bitmap:"+"test_tag");
         // 是否存在
         log.info("gao_tag 存在，预期结果为 true，测试结果:{}", bitSet.get(redisService.getIndexFromUserId("gao_tag")));
         log.info("gaogao_tag 存在，预期结果为 true，测试结果:{}", bitSet.get(redisService.getIndexFromUserId("gaogao_tag")));
