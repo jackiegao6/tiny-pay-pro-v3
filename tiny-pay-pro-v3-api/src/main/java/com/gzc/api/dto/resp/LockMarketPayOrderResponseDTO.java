@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 public class LockMarketPayOrderResponseDTO {
 
     private String orderId;
+    private BigDecimal originalPrice;
+    private BigDecimal deductionPrice;
     private BigDecimal currentPrice;
     /*组队id*/
     private String teamId;

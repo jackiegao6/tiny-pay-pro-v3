@@ -55,6 +55,8 @@ public class TradeRepository implements ITradeRepository {
         log.info("存在未完成的营销订单");
         return LockedOrderEntity.builder()
                 .orderId(groupBuyOrderListResp.getOrderId())
+                .originalPrice(groupBuyOrderListResp.getOriginalPrice())
+                .deductionPrice(groupBuyOrderListResp.getOriginalPrice().subtract(groupBuyOrderListResp.getCurrentPrice()))
                 .currentPrice(groupBuyOrderListResp.getCurrentPrice())
                 .tradeOrderStatusEnumVO(TradeOrderStatusEnumVO.CREATE)
                 .teamId(groupBuyOrderListResp.getTeamId())
@@ -131,6 +133,8 @@ public class TradeRepository implements ITradeRepository {
 
         return LockedOrderEntity.builder()
                 .orderId(orderId)
+                .originalPrice(payDiscountEntity.getOriginalPrice())
+                .deductionPrice(payDiscountEntity.getOriginalPrice().subtract(payDiscountEntity.getCurrentPrice()))
                 .currentPrice(payDiscountEntity.getCurrentPrice())
                 .tradeOrderStatusEnumVO(TradeOrderStatusEnumVO.CREATE)
                 .teamId(teamId)

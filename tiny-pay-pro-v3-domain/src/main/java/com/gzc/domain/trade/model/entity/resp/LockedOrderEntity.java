@@ -20,7 +20,8 @@ public class LockedOrderEntity {
     /** 预购订单ID */
     private String orderId;
     private String teamId;
-    /** 折扣金额 */
+    private BigDecimal originalPrice;
+    private BigDecimal deductionPrice;
     private BigDecimal currentPrice;
     /** 交易订单状态枚举 */
     private TradeOrderStatusEnumVO tradeOrderStatusEnumVO;
