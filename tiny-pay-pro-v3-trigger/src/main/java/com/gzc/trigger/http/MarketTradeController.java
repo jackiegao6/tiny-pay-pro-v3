@@ -3,8 +3,10 @@ package com.gzc.trigger.http;
 
 import com.alibaba.fastjson2.JSON;
 import com.gzc.api.dto.req.LockMarketPayOrderRequestDTO;
+import com.gzc.api.dto.req.ProductDescRequestDTO;
 import com.gzc.api.dto.req.SettlementRequestDTO;
 import com.gzc.api.dto.resp.LockMarketPayOrderResponseDTO;
+import com.gzc.api.dto.resp.ProductDescResponseDTO;
 import com.gzc.api.dto.resp.SettlementResponseDTO;
 import com.gzc.api.response.Response;
 import com.gzc.domain.trade.model.entity.req.PayActivityEntity;
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Slf4j
@@ -55,6 +58,8 @@ public class MarketTradeController {
             log.info("用户有未完结的订单，交易单号为：{}", outTradeNo);
             LockMarketPayOrderResponseDTO lockMarketPayOrderResponseDTO = LockMarketPayOrderResponseDTO.builder()
                     .orderId(lockedOrderEntity.getOrderId())
+                    .originalPrice(lockedOrderEntity.getOriginalPrice())
+                    .deductionPrice(lockedOrderEntity.getDeductionPrice())
                     .currentPrice(lockedOrderEntity.getCurrentPrice())
                     .tradeOrderStatus(lockedOrderEntity.getTradeOrderStatusEnumVO().getCode())
                     .build();
@@ -113,13 +118,15 @@ public class MarketTradeController {
                 .data(LockMarketPayOrderResponseDTO.builder()
                         .orderId(lockedOrderEntity.getOrderId())
                         .teamId(lockedOrderEntity.getTeamId())
+                        .originalPrice(lockedOrderEntity.getOriginalPrice())
+                        .deductionPrice(lockedOrderEntity.getDeductionPrice())
                         .currentPrice(lockedOrderEntity.getCurrentPrice())
                         .tradeOrderStatus(lockedOrderEntity.getTradeOrderStatusEnumVO().getCode())
                         .build())
                 .build();
     }
 
-    @RequestMapping(value = "settlement_market_pay_order", method = RequestMethod.POST)
+    @RequestMapping(value = "/settlement-order", method = RequestMethod.POST)
     public Response<SettlementResponseDTO> settlementMarketPayOrder(@RequestBody SettlementRequestDTO requestDTO) {
         try {
 
@@ -157,6 +164,22 @@ public class MarketTradeController {
                     .build();
         }
     }
+
+    // todo这一部分在后面更新为商品服务
+    @RequestMapping(value = "/get-product", method = RequestMethod.POST)
+    public Response<ProductDescResponseDTO> getProduct(@RequestBody ProductDescRequestDTO productDescRequestDTO){
+        ProductDescResponseDTO productDescResponseDTO = ProductDescResponseDTO.builder()
+                .productName("《手写MyBatis：渐进式源码实践》")
+                .productDesc(null)
+                .originalPrice(new BigDecimal("100.00"))
+                .build();
+        return Response.<ProductDescResponseDTO>builder()
+                .code(ResponseCode.SUCCESS.getCode())
+                .info(ResponseCode.SUCCESS.getInfo())
+                .data(productDescResponseDTO)
+                .build();
+    }
+
 
 
 
