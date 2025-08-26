@@ -12,7 +12,7 @@ public interface ITradeNotifyService {
     Map<String, Integer> execSettlementNotifyJob() throws Exception;
 
     /**
-     * 可以指定给某个拼团队伍做回调处理
+     * 可以指定给某个拼团队伍做结算回调处理
      *
      * @param teamId 指定结算组ID
      * @return 结算数量

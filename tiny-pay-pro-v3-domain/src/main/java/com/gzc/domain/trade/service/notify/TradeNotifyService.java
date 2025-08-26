@@ -43,7 +43,7 @@ public class TradeNotifyService implements ITradeNotifyService{
         int successCount = 0, errorCount = 0, retryCount = 0;
         for (NotifyTaskVO notifyTask : notifyTaskEntityList) {
             // 回调处理 success 成功，error 失败
-            String response = tradePort.groupBuyNotify(notifyTask);
+            String response = tradePort.settlementFinishNotify(notifyTask);
 
             // 更新状态判断&变更数据库表回调任务状态
             if (NotifyTaskHTTPEnumVO.SUCCESS.getCode().equals(response)) {

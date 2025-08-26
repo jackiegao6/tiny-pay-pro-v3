@@ -32,8 +32,9 @@ public class SettlementTradeNode extends AbstractNodeSupport {
 
 
         tradeRepository.settlementProcess(reqParam, groupBuyProgressVO);
+        // 到这有了某一个的回调任务
 
-        // 5. 组队回调处理 - 处理失败也会有定时任务补偿，通过这样的方式，可以减轻任务调度，提高时效性
+        // 进而进行 组队回调处理
         Map<String, Integer> notifyResultMap = tradeNotifyService.execSettlementNotifyJob(context.getTeamId());
         log.info("回调通知拼团完结 result:{}", JSON.toJSONString(notifyResultMap));
 

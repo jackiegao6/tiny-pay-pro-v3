@@ -20,13 +20,13 @@ public class TradePort implements ITradePort {
     private final IRedisService redisService;
 
     @Override
-    public String groupBuyNotify(NotifyTaskVO notifyTaskVO) throws Exception {
+    public String settlementFinishNotify(NotifyTaskVO notifyTaskVO) throws Exception {
 
         RLock lock = redisService.getLock(notifyTaskVO.lockKey());
 
         if (lock.tryLock(3,0, TimeUnit.SECONDS))
             try {
-                return groupBuyNotifyService.groupBuyNotify(notifyTaskVO.getNotifyUrl(), notifyTaskVO.getParameterJson());
+                return groupBuyNotifyService.settlementFinishNotify(notifyTaskVO.getNotifyUrl(), notifyTaskVO.getParameterJson());
             } finally {
                 if (lock.isLocked() && lock.isHeldByCurrentThread()){
                     lock.unlock();

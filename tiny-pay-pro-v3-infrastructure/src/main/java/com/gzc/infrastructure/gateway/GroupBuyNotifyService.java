@@ -16,7 +16,7 @@ public class GroupBuyNotifyService {
 
     private final OkHttpClient okHttpClient;
 
-    public String groupBuyNotify(String apiUrl, String notifyRequestDTOJSON) throws Exception {
+    public String settlementFinishNotify(String apiUrl, String notifyRequestDTOJSON) throws Exception {
         try {
             // 1. 构建参数
             MediaType mediaType = MediaType.parse("application/json");

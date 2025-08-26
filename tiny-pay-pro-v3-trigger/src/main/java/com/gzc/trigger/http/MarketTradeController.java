@@ -21,7 +21,6 @@ import com.gzc.domain.trial.model.entity.req.TrailMarketProductEntity;
 import com.gzc.domain.trial.model.entity.resp.TrailBalanceEntity;
 import com.gzc.domain.trial.service.trail.ITrailService;
 import com.gzc.types.enums.ResponseCode;
-import com.gzc.types.exception.AppException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -126,7 +125,7 @@ public class MarketTradeController {
                 .build();
     }
 
-    @RequestMapping(value = "/settlement-order", method = RequestMethod.POST)
+    @RequestMapping(value = "/settle-order", method = RequestMethod.POST)
     public Response<SettlementResponseDTO> settlementMarketPayOrder(@RequestBody SettlementRequestDTO requestDTO) {
         try {
 
@@ -150,12 +149,6 @@ public class MarketTradeController {
             log.info("营销交易组队结算完成:{} outTradeNo:{} response:{}", requestDTO.getUserId(), requestDTO.getOutTradeNo(), JSON.toJSONString(response));
 
             return response;
-        } catch (AppException e) {
-            log.error("营销交易组队结算异常:{} LockMarketPayOrderRequestDTO:{}", requestDTO.getUserId(), JSON.toJSONString(requestDTO), e);
-            return Response.<SettlementResponseDTO>builder()
-                    .code(e.getCode())
-                    .info(e.getInfo())
-                    .build();
         } catch (Exception e) {
             log.error("营销交易组队结算失败:{} LockMarketPayOrderRequestDTO:{}", requestDTO.getUserId(), JSON.toJSONString(requestDTO), e);
             return Response.<SettlementResponseDTO>builder()

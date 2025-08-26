@@ -7,6 +7,6 @@ import com.gzc.domain.trade.model.valobj.NotifyTaskVO;
  */
 public interface ITradePort {
 
-    String groupBuyNotify(NotifyTaskVO notifyTaskVO) throws Exception;
+    String settlementFinishNotify(NotifyTaskVO notifyTaskVO) throws Exception;
 
 }

@@ -183,21 +183,6 @@ public class TradeRepository implements ITradeRepository {
             throw new AppException(ResponseCode.UPDATE_COMPLETED_ORDER_STATUS_FAILED.getInfo());
         }
 
-        // 3. 更新拼团完成状态
-        Integer targetCount = groupBuyProgressVO.getTargetCount();
-        Integer completeCount = groupBuyProgressVO.getCompleteCount();
-        if (targetCount - completeCount == 1) {
-            int updateOrderStatusCount = orderDao.updateOrderStatus2COMPLETE(teamId);
-            if (1 != updateOrderStatusCount) {
-                log.error("更新组队状态至成功失败");
-                throw new AppException(ResponseCode.UPDATE_ORDER_STATUS_FAILED.getInfo());
-            }
-
-        }
-
-        // 查询拼团交易完成外部单号列表
-//        List<String> outTradeNoList = orderListDao.queryCompletedOutTradeNoListByTeamId(teamId);
-
         // 支付完成写入回调任务记录
         Long activityId = groupBuyProgressVO.getActivityId();
         String notifyUrl = groupBuyProgressVO.getNotifyUrl();
@@ -218,6 +203,21 @@ public class TradeRepository implements ITradeRepository {
 
         notifyTaskDao.insert(notifyTask);
 
+        // 3. 更新拼团完成状态
+        Integer targetCount = groupBuyProgressVO.getTargetCount();
+        Integer completeCount = groupBuyProgressVO.getCompleteCount();
+        if (targetCount - completeCount == 1) {
+            int updateOrderStatusCount = orderDao.updateOrderStatus2COMPLETE(teamId);
+            if (1 != updateOrderStatusCount) {
+                log.error("更新组队状态为完结 失败");
+                throw new AppException(ResponseCode.UPDATE_ORDER_STATUS_FAILED.getInfo());
+            }
+            // 如果是队列里的最后一个人 则 更新组队状态为完结态
+            // 用mq通知
+            // todo
+
+        }
+
     }
 
     @Override
@@ -226,9 +226,13 @@ public class TradeRepository implements ITradeRepository {
         return BeanUtil.copyToList(notifyTasks, NotifyTaskVO.class);
     }
 
+    /**
+     * 根据teamId查找里面 还没有做结算回调处理的任务
+     */
     @Override
     public List<NotifyTaskVO> queryUnExecutedNotifyTaskList(String teamId) {
         NotifyTask notifyTask = notifyTaskDao.queryUnExecutedNotifyTaskByTeamId(teamId);
+
         NotifyTaskVO notifyTaskVO = BeanUtil.copyProperties(notifyTask, NotifyTaskVO.class);
         return Collections.singletonList(notifyTaskVO);
     }
