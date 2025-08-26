@@ -46,4 +46,6 @@ public interface IGroupBuyOrderListDao {
 
     String queryTeamIdByUserIdAndOutTradeNo(GroupBuyOrderList groupBuyOrderListReq);
 
+    List<GroupBuyOrderList> queryUsersAndOrdersByTeamId(String teamId);
+
 }

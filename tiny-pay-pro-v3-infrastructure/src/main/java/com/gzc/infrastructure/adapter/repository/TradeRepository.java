@@ -2,6 +2,7 @@ package com.gzc.infrastructure.adapter.repository;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson2.JSON;
+import com.gzc.domain.trade.adapter.port.ITradePort;
 import com.gzc.domain.trade.adapter.repository.ITradeRepository;
 import com.gzc.domain.trade.model.entity.req.PayActivityEntity;
 import com.gzc.domain.trade.model.entity.req.PayDiscountEntity;
@@ -9,6 +10,7 @@ import com.gzc.domain.trade.model.entity.req.TradePaySuccessEntity;
 import com.gzc.domain.trade.model.entity.resp.LockedOrderEntity;
 import com.gzc.domain.trade.model.valobj.GroupBuyProgressVO;
 import com.gzc.domain.trade.model.valobj.NotifyTaskVO;
+import com.gzc.domain.trade.model.valobj.TeamVO;
 import com.gzc.domain.trade.model.valobj.TradeOrderStatusEnumVO;
 import com.gzc.infrastructure.dao.IGroupBuyOrderDao;
 import com.gzc.infrastructure.dao.IGroupBuyOrderListDao;
@@ -27,10 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Repository
 @Slf4j
@@ -40,6 +39,7 @@ public class TradeRepository implements ITradeRepository {
     private final IGroupBuyOrderListDao orderListDao;
     private final IGroupBuyOrderDao orderDao;
     private final INotifyTaskDao notifyTaskDao;
+    private final ITradePort tradePort;
 
     @Override
     public LockedOrderEntity queryUnfinishedPayOrderByOutTradeNo(String userId, String outTradeNo) {
@@ -213,11 +213,15 @@ public class TradeRepository implements ITradeRepository {
                 throw new AppException(ResponseCode.UPDATE_ORDER_STATUS_FAILED.getInfo());
             }
             // 如果是队列里的最后一个人 则 更新组队状态为完结态
-            // 用mq通知
-            // todo
-
+            HashMap<String, Map<String, String>> user2orderMap = new HashMap<>();
+            HashMap<String, String> user2orderMap2 = new HashMap<>();
+            for (GroupBuyOrderList groupBuyOrderList : orderListDao.queryUsersAndOrdersByTeamId(teamId)) {
+                user2orderMap2.put(groupBuyOrderList.getUserId(), groupBuyOrderList.getOrderId());
+            }
+            user2orderMap.put(teamId, user2orderMap2);
+            TeamVO teamVO = TeamVO.builder().user2orderMap(user2orderMap).build();
+            tradePort.teamFinishNotify(teamVO);
         }
-
     }
 
     @Override

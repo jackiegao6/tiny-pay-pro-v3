@@ -1,7 +1,9 @@
 package com.gzc.infrastructure.adapter.port;
 
+import com.alibaba.fastjson2.JSON;
 import com.gzc.domain.trade.adapter.port.ITradePort;
 import com.gzc.domain.trade.model.valobj.NotifyTaskVO;
+import com.gzc.domain.trade.model.valobj.TeamVO;
 import com.gzc.infrastructure.gateway.GroupBuyNotifyService;
 import com.gzc.infrastructure.redis.IRedisService;
 import com.gzc.types.enums.NotifyTaskHTTPEnumVO;
@@ -35,6 +37,10 @@ public class TradePort implements ITradePort {
         else {
             return NotifyTaskHTTPEnumVO.NULL.getCode();
         }
+    }
 
+    @Override
+    public String teamFinishNotify(TeamVO teamVO) {
+        return groupBuyNotifyService.teamFinishNotify(JSON.toJSONString(teamVO));
     }
 }

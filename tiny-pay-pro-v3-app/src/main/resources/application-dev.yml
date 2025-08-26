@@ -1,6 +1,13 @@
 server:
   port: 8091
 
+app:
+  config:
+    api-version: v1
+    cross-origin: '*'
+    pay-mall:
+      team-finish-notify-url: http://127.0.0.1:8090/api/v1/pay-mall/team-finish
+
 # 线程池配置
 thread:
   pool:
@@ -55,7 +62,7 @@ spring:
 mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml
   config-location:  classpath:/mybatis/config/mybatis-config.xml
-# Redis
+
 redis:
   sdk:
     config:
