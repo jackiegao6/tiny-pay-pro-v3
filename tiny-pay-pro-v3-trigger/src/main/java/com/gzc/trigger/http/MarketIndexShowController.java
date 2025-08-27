@@ -82,6 +82,7 @@ public class MarketIndexShowController implements IMarketIndexShowService {
                     .code(ResponseCode.SUCCESS.getCode())
                     .info(ResponseCode.SUCCESS.getInfo())
                     .data(MarketIndexShowResponseDTO.builder()
+                            .activityId(activityId)
                             .goodsInfo(goodsInfo)
                             .teamInfos(teamInfos)
                             .teamStatisticInfo(teamStatisticInfo)
