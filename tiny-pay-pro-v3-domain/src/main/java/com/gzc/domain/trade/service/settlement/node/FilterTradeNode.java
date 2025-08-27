@@ -29,6 +29,10 @@ public class FilterTradeNode extends AbstractNodeSupport {
         String userId = reqParam.getUserId();
         String outTradeNo = reqParam.getOutTradeNo();
         String teamId = tradeRepository.queryTeamIdByUserIdAndOutTradeNo(userId, outTradeNo);
+        if (null == teamId){
+            log.error("本地orderlist 没有这笔订单 userId: {} outTradeNo: {}", userId, outTradeNo);
+            throw new AppException("没有这笔订单");
+        }
 
         GroupBuyProgressVO groupBuyProgressVO = tradeRepository.querygroupBuyProgressVOByTeamId(teamId);
 

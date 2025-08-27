@@ -1,5 +1,6 @@
 package com.gzc.infrastructure.gateway;
 
+import com.gzc.types.enums.NotifyTaskHTTPEnumVO;
 import com.gzc.types.enums.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
@@ -33,9 +34,10 @@ public class GroupBuyNotifyService {
 
             // 2. 调用接口
             Response response = okHttpClient.newCall(request).execute();
-
-            // 3. 返回结果
-            return response.body().string();
+            if (response.isSuccessful()){
+                return NotifyTaskHTTPEnumVO.SUCCESS.getCode();
+            }
+            return NotifyTaskHTTPEnumVO.ERROR.getCode();
         } catch (Exception e) {
             log.error("拼团回调 HTTP 接口服务异常 {}", apiUrl, e);
             throw new AppException(ResponseCode.NOTIFY_API_ERROR.getCode(), ResponseCode.NOTIFY_API_ERROR.getInfo());
