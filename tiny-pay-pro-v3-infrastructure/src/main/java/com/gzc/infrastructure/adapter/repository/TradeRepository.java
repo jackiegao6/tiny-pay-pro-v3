@@ -8,10 +8,7 @@ import com.gzc.domain.trade.model.entity.req.PayActivityEntity;
 import com.gzc.domain.trade.model.entity.req.PayDiscountEntity;
 import com.gzc.domain.trade.model.entity.req.TradePaySuccessEntity;
 import com.gzc.domain.trade.model.entity.resp.LockedOrderEntity;
-import com.gzc.domain.trade.model.valobj.GroupBuyProgressVO;
-import com.gzc.domain.trade.model.valobj.NotifyTaskVO;
-import com.gzc.domain.trade.model.valobj.TeamVO;
-import com.gzc.domain.trade.model.valobj.TradeOrderStatusEnumVO;
+import com.gzc.domain.trade.model.valobj.*;
 import com.gzc.infrastructure.dao.IGroupBuyOrderDao;
 import com.gzc.infrastructure.dao.IGroupBuyOrderListDao;
 import com.gzc.infrastructure.dao.INotifyTaskDao;
@@ -24,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +38,8 @@ public class TradeRepository implements ITradeRepository {
     private final IGroupBuyOrderDao orderDao;
     private final INotifyTaskDao notifyTaskDao;
     private final ITradePort tradePort;
+    @Value("${spring.rabbitmq.config.producer.topic_team_success.routing_key}")
+    private String topic_team_success;
 
     @Override
     public LockedOrderEntity queryUnfinishedPayOrderByOutTradeNo(String userId, String outTradeNo) {
@@ -92,6 +92,7 @@ public class TradeRepository implements ITradeRepository {
             Integer validTime = payActivityEntity.getValidTime();
             Date validEndTime = new Date(validStartTime.getTime() + validTime * 60 * 1000L);
 
+            NotifyConfigVO notifyConfigVO = payActivityEntity.getNotifyConfigVO();
             GroupBuyOrder groupBuyOrder = GroupBuyOrder.builder()
                     .teamId(teamId)
                     .activityId(payActivityEntity.getActivityId())
@@ -103,7 +104,8 @@ public class TradeRepository implements ITradeRepository {
                     .lockCount(1)
                     .validStartTime(validStartTime)
                     .validEndTime(validEndTime)
-                    .notifyUrl(payActivityEntity.getNotifyUrl())
+                    .notifyType(notifyConfigVO.getNotifyType().getCode())
+                    .notifyUrl(notifyConfigVO.getNotifyUrl())
                     .build();
 
             // 写入记录
@@ -153,17 +155,22 @@ public class TradeRepository implements ITradeRepository {
                 .activityId(groupBuyOrderResp.getActivityId())
                 .status(TradeOrderStatusEnumVO.valueOf(groupBuyOrderResp.getStatus()))
                 .validEndTime(groupBuyOrderResp.getValidEndTime())
-                .notifyUrl(groupBuyOrderResp.getNotifyUrl())
+                .notifyConfigVO(NotifyConfigVO.builder()
+                        .notifyType(NotifyConfigEnumVO.valueOf(groupBuyOrderResp.getNotifyType()))
+                        .notifyUrl(groupBuyOrderResp.getNotifyUrl())
+                        .notifyMQ(topic_team_success)
+                        .build())
                 .build();
     }
 
     @Transactional
     @Override
-    public void settlementProcess(TradePaySuccessEntity tradePaySuccessEntity, GroupBuyProgressVO groupBuyProgressVO) {
+    public NotifyTaskVO settlementProcess(TradePaySuccessEntity tradePaySuccessEntity, GroupBuyProgressVO groupBuyProgressVO) {
 
         String userId = tradePaySuccessEntity.getUserId();
         String outTradeNo = tradePaySuccessEntity.getOutTradeNo();
         String teamId = groupBuyProgressVO.getTeamId();
+        NotifyConfigVO notifyConfigVO = groupBuyProgressVO.getNotifyConfigVO();
 
         // 1. 更新未支付订单状态为已支付
         GroupBuyOrderList groupBuyOrderListReq = new GroupBuyOrderList();
@@ -185,11 +192,13 @@ public class TradeRepository implements ITradeRepository {
 
         // 支付完成写入回调任务记录
         Long activityId = groupBuyProgressVO.getActivityId();
-        String notifyUrl = groupBuyProgressVO.getNotifyUrl();
+
         NotifyTask notifyTask = NotifyTask.builder()
                 .activityId(activityId)
                 .teamId(teamId)
-                .notifyUrl(notifyUrl)
+                .notifyType(notifyConfigVO.getNotifyType().getCode())
+                .notifyUrl(NotifyConfigEnumVO.HTTP.equals(notifyConfigVO.getNotifyType()) ? notifyConfigVO.getNotifyUrl() : null)
+                .notifyMQ(NotifyConfigEnumVO.MQ.equals(notifyConfigVO.getNotifyType()) ? notifyConfigVO.getNotifyMQ() : null)
                 .notifyCount(0)
                 .notifyStatus(0)
                 .parameterJson(
@@ -222,6 +231,16 @@ public class TradeRepository implements ITradeRepository {
             TeamVO teamVO = TeamVO.builder().user2orderMap(user2orderMap).build();
             tradePort.teamFinishNotify(teamVO);
         }
+
+        // 把刚刚构建好的 NotifyTaskVO 对象返回出去
+        return NotifyTaskVO.builder()
+                .teamId(notifyTask.getTeamId())
+                .notifyType(notifyTask.getNotifyType())
+                .notifyMQ(notifyTask.getNotifyMQ())
+                .notifyUrl(notifyTask.getNotifyUrl())
+                .notifyCount(notifyTask.getNotifyCount())
+                .parameterJson(notifyTask.getParameterJson())
+                .build();
     }
 
     @Override

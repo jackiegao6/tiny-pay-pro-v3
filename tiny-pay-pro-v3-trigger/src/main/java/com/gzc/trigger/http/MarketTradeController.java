@@ -15,6 +15,8 @@ import com.gzc.domain.trade.model.entity.req.TradePaySuccessEntity;
 import com.gzc.domain.trade.model.entity.resp.LockedOrderEntity;
 import com.gzc.domain.trade.model.entity.resp.TradePaySettlementEntity;
 import com.gzc.domain.trade.model.valobj.GroupBuyProgressVO;
+import com.gzc.domain.trade.model.valobj.NotifyConfigEnumVO;
+import com.gzc.domain.trade.model.valobj.NotifyConfigVO;
 import com.gzc.domain.trade.service.lock.ITradeLockOrderService;
 import com.gzc.domain.trade.service.settlement.ITradeSettlementService;
 import com.gzc.domain.trial.model.entity.req.TrailMarketProductEntity;
@@ -48,7 +50,7 @@ public class MarketTradeController {
         Long activityId = lockMarketPayOrderRequestDTO.getActivityId();
         String teamId = lockMarketPayOrderRequestDTO.getTeamId();
         String outTradeNo = lockMarketPayOrderRequestDTO.getOutTradeNo();
-        String notifyUrl = lockMarketPayOrderRequestDTO.getNotifyUrl();
+        LockMarketPayOrderRequestDTO.NotifyConfigVO notifyConfigVO = lockMarketPayOrderRequestDTO.getNotifyConfigVO();
 
 
         // 查询 outTradeNo 是否已经存在交易记录
@@ -99,7 +101,11 @@ public class MarketTradeController {
                         .endTime(trialBalanceEntity.getEndTime())
                         .validTime(trialBalanceEntity.getValidTime())
                         .targetCount(trialBalanceEntity.getTarget())
-                        .notifyUrl(notifyUrl)
+                        .notifyConfigVO(NotifyConfigVO.builder()
+                                .notifyType(NotifyConfigEnumVO.valueOf(notifyConfigVO.getNotifyType()))
+                                .notifyMQ(notifyConfigVO.getNotifyMQ())
+                                .notifyUrl(notifyConfigVO.getNotifyUrl())
+                                .build())
                         .build(),
                 PayDiscountEntity.builder()
                         .goodsId(goodsId)

@@ -20,7 +20,7 @@ public interface ITradeRepository {
 
     GroupBuyProgressVO querygroupBuyProgressVOByTeamId(String teamId);
 
-    void settlementProcess(TradePaySuccessEntity tradePaySuccessEntity, GroupBuyProgressVO groupBuyProgressVO);
+    NotifyTaskVO settlementProcess(TradePaySuccessEntity tradePaySuccessEntity, GroupBuyProgressVO groupBuyProgressVO);
 
     List<NotifyTaskVO> queryUnExecutedNotifyTaskList();
 

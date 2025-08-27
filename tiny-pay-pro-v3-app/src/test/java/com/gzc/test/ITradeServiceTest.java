@@ -31,12 +31,12 @@ public class ITradeServiceTest {
     @Test
     public void test_lockMarketPayOrder() throws Exception {
         LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO = new LockMarketPayOrderRequestDTO();
-        lockMarketPayOrderRequestDTO.setUserId("gzc");
+        lockMarketPayOrderRequestDTO.setUserId("user1024");
         lockMarketPayOrderRequestDTO.setTeamId(null);
         lockMarketPayOrderRequestDTO.setActivityId(100123L);
         lockMarketPayOrderRequestDTO.setGoodsId("9890001");
         lockMarketPayOrderRequestDTO.setOutTradeNo(RandomStringUtils.randomNumeric(12));
-        lockMarketPayOrderRequestDTO.setNotifyUrl("http://127.0.0.1:8090/api/v1/test/group_buy_notify");
+        lockMarketPayOrderRequestDTO.setNotifyUrl("http://127.0.0.1:8090/api/v1/pay-mall/settlement");
 
         Response<LockMarketPayOrderResponseDTO> lockMarketPayOrderResponseDTOResponse = marketTradeController.lockMarketPayOrder(lockMarketPayOrderRequestDTO);
         log.info("测试结果 req:{} \nres:{}", JSON.toJSONString(lockMarketPayOrderRequestDTO), JSON.toJSONString(lockMarketPayOrderResponseDTOResponse));
@@ -51,7 +51,7 @@ public class ITradeServiceTest {
         lockMarketPayOrderRequestDTO.setActivityId(100123L);
         lockMarketPayOrderRequestDTO.setGoodsId("9890001");
         lockMarketPayOrderRequestDTO.setOutTradeNo(RandomStringUtils.randomNumeric(12));
-        lockMarketPayOrderRequestDTO.setNotifyUrl("http://127.0.0.1:8090/api/v1/test/group_buy_notify");
+        lockMarketPayOrderRequestDTO.setNotifyUrl("http://127.0.0.1:8090/api/v1/pay-mall/settlement");
 
         Response<LockMarketPayOrderResponseDTO> lockMarketPayOrderResponseDTOResponse = marketTradeController.lockMarketPayOrder(lockMarketPayOrderRequestDTO);
         log.info("测试结果 req:{} \nres:{}", JSON.toJSONString(lockMarketPayOrderRequestDTO), JSON.toJSONString(lockMarketPayOrderResponseDTOResponse));
@@ -60,8 +60,8 @@ public class ITradeServiceTest {
     @Test
     public void test_settlementMarketPayOrder() throws Exception {
         TradePaySuccessEntity tradePaySuccessEntity = new TradePaySuccessEntity();
-        tradePaySuccessEntity.setUserId("gzc2");
-        tradePaySuccessEntity.setOutTradeNo("699756525481");
+        tradePaySuccessEntity.setUserId("user1024");
+        tradePaySuccessEntity.setOutTradeNo("920787120323");
         TradePaySettlementEntity tradePaySettlementEntity = tradeSettlementService.settlementMarketPayOrder(tradePaySuccessEntity);
         log.info("请求参数:{}", JSON.toJSONString(tradePaySuccessEntity));
         log.info("测试结果:{}", JSON.toJSONString(tradePaySettlementEntity));

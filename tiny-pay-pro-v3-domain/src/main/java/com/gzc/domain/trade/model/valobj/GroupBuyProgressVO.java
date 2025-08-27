@@ -31,7 +31,7 @@ public class GroupBuyProgressVO {
     private Date validEndTime;
     private Date outTradeTime;
 
-    private String notifyUrl;
+    private NotifyConfigVO notifyConfigVO;
 
 
 }

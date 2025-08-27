@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,12 @@ public class TradeNotifyService implements ITradeNotifyService{
 
         List<NotifyTaskVO> notifyTaskEntityList = tradeRepository.queryUnExecutedNotifyTaskList(teamId);
         return execSettlementNotifyJob(notifyTaskEntityList);
+    }
+
+    @Override
+    public Map<String, Integer> execSettlementNotifyJob(NotifyTaskVO notifyTaskVO) throws Exception {
+        List<NotifyTaskVO> notifyTaskVOS = Collections.singletonList(notifyTaskVO);
+        return execSettlementNotifyJob(notifyTaskVOS);
     }
 
     private Map<String, Integer> execSettlementNotifyJob(List<NotifyTaskVO> notifyTaskEntityList) throws Exception {

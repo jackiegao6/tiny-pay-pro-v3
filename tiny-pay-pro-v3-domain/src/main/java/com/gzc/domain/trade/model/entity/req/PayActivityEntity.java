@@ -1,4 +1,5 @@
 package com.gzc.domain.trade.model.entity.req;
+import com.gzc.domain.trade.model.valobj.NotifyConfigVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +29,6 @@ public class PayActivityEntity {
     /** 目标数量 */
     private Integer targetCount;
 
-    private String notifyUrl;
+    private NotifyConfigVO notifyConfigVO;
 
 }

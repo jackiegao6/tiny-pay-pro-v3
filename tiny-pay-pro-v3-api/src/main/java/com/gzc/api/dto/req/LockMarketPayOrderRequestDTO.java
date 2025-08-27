@@ -11,11 +11,25 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LockMarketPayOrderRequestDTO {
 
-    String userId;
-    String goodsId;
-    Long activityId;
-    String teamId;
-    String outTradeNo;
-    String notifyUrl;
+    private String userId;
+    private String teamId;
+    private Long activityId;
+    private String goodsId;
+    private String outTradeNo;
+    private NotifyConfigVO notifyConfigVO;
+
+    public void setNotifyUrl(String notifyUrl){
+        NotifyConfigVO notifyConfigVO = new NotifyConfigVO();
+        notifyConfigVO.setNotifyType("HTTP");
+        notifyConfigVO.setNotifyUrl(notifyUrl);
+        this.notifyConfigVO = notifyConfigVO;
+    }
+
+    @Data
+    public static class NotifyConfigVO{
+        private String notifyType;
+        private String notifyMQ;
+        private String notifyUrl;
+    }
 
 }

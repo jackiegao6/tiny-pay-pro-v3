@@ -39,6 +39,8 @@ public class GroupBuyOrder {
 
     private Date validEndTime;
 
+    private String notifyType;
+
     private String notifyUrl;
     /** 创建时间 */
     private Date createTime;

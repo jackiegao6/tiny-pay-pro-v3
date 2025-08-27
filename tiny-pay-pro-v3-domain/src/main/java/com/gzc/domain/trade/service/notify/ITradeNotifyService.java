@@ -1,5 +1,7 @@
 package com.gzc.domain.trade.service.notify;
 
+import com.gzc.domain.trade.model.valobj.NotifyTaskVO;
+
 import java.util.Map;
 
 public interface ITradeNotifyService {
@@ -19,5 +21,8 @@ public interface ITradeNotifyService {
      * @throws Exception 异常
      */
     Map<String, Integer> execSettlementNotifyJob(String teamId) throws Exception;
+
+
+    Map<String, Integer> execSettlementNotifyJob(NotifyTaskVO notifyTaskVO) throws Exception;
 
 }

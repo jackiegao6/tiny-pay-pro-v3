@@ -16,10 +16,11 @@ public class NotifyTaskVO {
      * 拼单组队ID
      */
     private String teamId;
-    /**
-     * 回调接口
-     */
+
+    private String notifyType;
+    private String notifyMQ;
     private String notifyUrl;
+
     /**
      * 回调次数
      */
