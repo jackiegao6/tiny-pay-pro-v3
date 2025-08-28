@@ -18,6 +18,13 @@ public class LockMarketPayOrderRequestDTO {
     private String outTradeNo;
     private NotifyConfigVO notifyConfigVO;
 
+    public void setNotifyMQ(String routingKey){
+        NotifyConfigVO notifyConfigVO = new NotifyConfigVO();
+        notifyConfigVO.setNotifyType("MQ");
+        notifyConfigVO.setNotifyMQ(routingKey);
+        this.notifyConfigVO = notifyConfigVO;
+    }
+
     public void setNotifyUrl(String notifyUrl){
         NotifyConfigVO notifyConfigVO = new NotifyConfigVO();
         notifyConfigVO.setNotifyType("HTTP");

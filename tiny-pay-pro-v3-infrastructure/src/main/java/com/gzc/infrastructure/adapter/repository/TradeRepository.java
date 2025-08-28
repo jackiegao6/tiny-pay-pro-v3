@@ -190,28 +190,6 @@ public class TradeRepository implements ITradeRepository {
             throw new AppException(ResponseCode.UPDATE_COMPLETED_ORDER_STATUS_FAILED.getInfo());
         }
 
-        // 支付完成写入回调任务记录
-        Long activityId = groupBuyProgressVO.getActivityId();
-
-        NotifyTask notifyTask = NotifyTask.builder()
-                .activityId(activityId)
-                .teamId(teamId)
-                .notifyType(notifyConfigVO.getNotifyType().getCode())
-                .notifyUrl(NotifyConfigEnumVO.HTTP.equals(notifyConfigVO.getNotifyType()) ? notifyConfigVO.getNotifyUrl() : null)
-                .notifyMQ(NotifyConfigEnumVO.MQ.equals(notifyConfigVO.getNotifyType()) ? notifyConfigVO.getNotifyMQ() : null)
-                .notifyCount(0)
-                .notifyStatus(0)
-                .parameterJson(
-                        JSON.toJSONString(new HashMap<String, Object>() {{
-                            put("teamId", teamId);
-                            put("userId", userId);
-                            put("outTradeNo", outTradeNo);
-                        }})
-                )
-                .build();
-
-        notifyTaskDao.insert(notifyTask);
-
         // 3. 更新拼团完成状态
         Integer targetCount = groupBuyProgressVO.getTargetCount();
         Integer completeCount = groupBuyProgressVO.getCompleteCount();
@@ -221,26 +199,38 @@ public class TradeRepository implements ITradeRepository {
                 log.error("更新组队状态为完结 失败");
                 throw new AppException(ResponseCode.UPDATE_ORDER_STATUS_FAILED.getInfo());
             }
-            // 如果是队列里的最后一个人 则 更新组队状态为完结态
-            HashMap<String, Map<String, String>> user2orderMap = new HashMap<>();
-            HashMap<String, String> user2orderMap2 = new HashMap<>();
-            for (GroupBuyOrderList groupBuyOrderList : orderListDao.queryUsersAndOrdersByTeamId(teamId)) {
-                user2orderMap2.put(groupBuyOrderList.getUserId(), groupBuyOrderList.getOrderId());
-            }
-            user2orderMap.put(teamId, user2orderMap2);
-            TeamVO teamVO = TeamVO.builder().user2orderMap(user2orderMap).build();
-            tradePort.teamFinishNotify(teamVO);
-        }
 
-        // 把刚刚构建好的 NotifyTaskVO 对象返回出去
-        return NotifyTaskVO.builder()
-                .teamId(notifyTask.getTeamId())
-                .notifyType(notifyTask.getNotifyType())
-                .notifyMQ(notifyTask.getNotifyMQ())
-                .notifyUrl(notifyTask.getNotifyUrl())
-                .notifyCount(notifyTask.getNotifyCount())
-                .parameterJson(notifyTask.getParameterJson())
-                .build();
+            // 查询拼团交易完成外部单号列表
+            List<String> outTradeNoList = orderListDao.queryCompletedOutTradeNoListByTeamId(teamId);
+            Long activityId = groupBuyProgressVO.getActivityId();
+            // 组团完成写入回调任务记录
+            NotifyTask notifyTask = NotifyTask.builder()
+                    .activityId(activityId)
+                    .teamId(teamId)
+                    .notifyType(notifyConfigVO.getNotifyType().getCode())
+                    .notifyUrl(NotifyConfigEnumVO.HTTP.equals(notifyConfigVO.getNotifyType()) ? notifyConfigVO.getNotifyUrl() : null)
+                    .notifyMQ(NotifyConfigEnumVO.MQ.equals(notifyConfigVO.getNotifyType()) ? notifyConfigVO.getNotifyMQ() : null)
+                    .notifyCount(0)
+                    .notifyStatus(0)
+                    .parameterJson(
+                            JSON.toJSONString(new HashMap<String, Object>() {{
+                                put("teamId", teamId);
+                                put("outTradeNoList", outTradeNoList);
+                            }})
+                    )
+                    .build();
+
+            notifyTaskDao.insert(notifyTask);
+            return NotifyTaskVO.builder()
+                    .teamId(notifyTask.getTeamId())
+                    .notifyType(notifyTask.getNotifyType())
+                    .notifyMQ(notifyTask.getNotifyMQ())
+                    .notifyUrl(notifyTask.getNotifyUrl())
+                    .notifyCount(notifyTask.getNotifyCount())
+                    .parameterJson(notifyTask.getParameterJson())
+                    .build();
+        }
+        return null;
     }
 
     @Override
