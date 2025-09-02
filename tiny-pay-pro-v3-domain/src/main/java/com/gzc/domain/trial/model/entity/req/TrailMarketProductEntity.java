@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TrailMarketProductEntity {
 
+    private Long activityId;
     /** 用户ID */
     private String userId;
     /** 商品ID */

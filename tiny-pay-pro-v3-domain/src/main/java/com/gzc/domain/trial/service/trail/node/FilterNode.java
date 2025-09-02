@@ -1,6 +1,5 @@
 package com.gzc.domain.trial.service.trail.node;
 
-import com.gzc.domain.trade.adapter.repository.ITradeRepository;
 import com.gzc.domain.trial.model.entity.req.TrailMarketProductEntity;
 import com.gzc.domain.trial.model.entity.resp.TrailBalanceEntity;
 import com.gzc.domain.trial.model.valobj.ActivityDiscountVO;

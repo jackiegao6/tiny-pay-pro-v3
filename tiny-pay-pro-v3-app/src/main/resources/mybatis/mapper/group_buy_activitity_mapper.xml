@@ -31,7 +31,7 @@
             discount_id, group_type, take_limit_count, target, valid_time,
             status, start_time, end_time, tag_id, tag_scope
         from group_buy_activity
-        where goods_id = #{goodsId}
+        where goods_id = #{goodsId} and status = 1
     </select>
 
 </mapper>

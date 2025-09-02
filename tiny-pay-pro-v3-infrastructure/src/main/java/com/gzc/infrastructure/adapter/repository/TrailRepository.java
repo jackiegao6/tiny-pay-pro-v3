@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class TrailRepository implements ITrailRepository {
+public class TrailRepository extends AbstractRepository implements ITrailRepository {
 
     private final ISkuDao skuDao;
     private final IGroupBuyActivityDao activityDao;
@@ -40,7 +40,11 @@ public class TrailRepository implements ITrailRepository {
     public ActivityDiscountVO queryActivityAndDiscountVOByGoodsId(String goodsId) {
         GroupBuyActivity groupBuyActivity = activityDao.queryActivityByGoodsId(goodsId);
         String discountId = groupBuyActivity.getDiscountId();
-        GroupBuyDiscount groupBuyDiscount = discountDao.queryDiscountByDiscountId(discountId);
+
+        String discountCacheKey = GroupBuyDiscount.cacheKey(discountId);
+        GroupBuyDiscount groupBuyDiscount =
+                getValueFromCacheOrDb(discountCacheKey, () -> discountDao.queryDiscountByDiscountId(discountId));
+
         return ActivityDiscountVO.builder()
                 .activityId(groupBuyActivity.getActivityId())
                 .activityName(groupBuyActivity.getActivityName())
