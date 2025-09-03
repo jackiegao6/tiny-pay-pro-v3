@@ -8,6 +8,14 @@ app:
     pay-mall:
       team-finish-notify-url: http://127.0.0.1:8090/api/v1/pay-mall/team-finish
 
+# 扳手工程配置
+wrench:
+  config:
+    system: gbm
+    register:
+      host: 192.168.31.25
+      port: 16379
+
 # 线程池配置
 thread:
   pool:

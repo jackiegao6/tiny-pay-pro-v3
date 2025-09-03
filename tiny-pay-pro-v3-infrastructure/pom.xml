@@ -11,6 +11,12 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>com.gzc</groupId>
+            <artifactId>wrench-starter-dynamic-config-center</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <!-- http 接口框架 https://bugstack.cn/md/road-map/http.html -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>

@@ -149,6 +149,15 @@
                 <artifactId>tiny-pay-pro-v3-trigger</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
+
+            <!--本地jar包-->
+            <dependency>
+                <groupId>com.gzc</groupId>
+                <artifactId>tiny-wrench-v1</artifactId>
+                <version>1.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
