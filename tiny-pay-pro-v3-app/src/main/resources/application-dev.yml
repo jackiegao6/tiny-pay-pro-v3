@@ -82,6 +82,9 @@ redis:
       ping-interval: 60000
       keep-alive: true
 
+logstash:
+  host: 192.168.31.25
+
 
 # 日志
 logging:
