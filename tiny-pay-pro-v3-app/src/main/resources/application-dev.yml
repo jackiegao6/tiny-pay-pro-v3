@@ -1,6 +1,15 @@
 server:
   port: 8091
 
+  tomcat:
+    mbeanregistry:
+      enabled: true
+    max-connections: 20
+    threads:
+      max: 20
+      min-spare: 10
+    accept-count: 10 # 等待队列长度
+
 app:
   config:
     api-version: v1
@@ -82,9 +91,25 @@ redis:
       ping-interval: 60000
       keep-alive: true
 
+# 日志；logstash部署的服务器ip
 logstash:
   host: 192.168.31.25
 
+# 监控配置 Prometheus + Grafana
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  prometheus:
+    enabled: true
 
 # 日志
 logging:
